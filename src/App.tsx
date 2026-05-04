@@ -4,12 +4,14 @@ import type { CharacterSearchResult } from './types/CharacterSearchResult';
 import { getCharactersPage, searchCharacters } from './api/RickAndMortyAPI';
 import { ChracterCard } from './components/ChracterCard';
 import { Pagination } from './components/Pagination';
+import loadingSVG from './assets/loading.svg';
 
 const LAST_SEARCH_KEY = 'last_search';
 
 interface AppState {
   lastSearch?: string;
   result?: CharacterSearchResult;
+  loading: boolean;
 }
 
 class App extends React.Component<{}, AppState> {
@@ -17,7 +19,7 @@ class App extends React.Component<{}, AppState> {
 
   constructor(props: {}) {
     super(props);
-    this.state = {};
+    this.state = { loading: false };
 
     const lastSearched = localStorage.getItem(LAST_SEARCH_KEY);
     if (lastSearched !== null) {
@@ -40,6 +42,14 @@ class App extends React.Component<{}, AppState> {
     this.handleSearch();
   }
 
+  startLoading = () => {
+    this.setState((lastState) => ({ ...lastState, loading: true }));
+  };
+
+  endLoading = () => {
+    this.setState((lastState) => ({ ...lastState, loading: false }));
+  };
+
   handleSearch = async () => {
     if (this.searchInput?.current?.value !== undefined) {
       let query = this.searchInput?.current?.value;
@@ -47,18 +57,25 @@ class App extends React.Component<{}, AppState> {
       this.searchInput.current.value = query;
 
       localStorage.setItem(LAST_SEARCH_KEY, query);
+
+      this.startLoading();
       const result = await searchCharacters(query, 1);
+      this.endLoading();
+
       this.setState((lastState) => ({ ...lastState, result }));
     }
   };
 
   selectPage = async (url: string) => {
+    this.startLoading();
     const result = await getCharactersPage(url);
+    this.endLoading();
+
     this.setState((lastState) => ({ ...lastState, result }));
   };
 
   render() {
-    const { result } = this.state;
+    const { loading, result } = this.state;
 
     return (
       <>
@@ -93,6 +110,12 @@ class App extends React.Component<{}, AppState> {
             />
           )}
         </section>
+
+        {loading && (
+          <div className="loading-space">
+            <img className="loading-indicator" src={loadingSVG} />
+          </div>
+        )}
       </>
     );
   }
