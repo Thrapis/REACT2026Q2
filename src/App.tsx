@@ -36,6 +36,7 @@ class App extends React.Component<{}, AppState> {
     ) {
       this.searchInput.current.value = this.state.initSearch;
     }
+    this.handleSearch();
   }
 
   handleSearch = async () => {
