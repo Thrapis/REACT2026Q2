@@ -1,13 +1,14 @@
 import React from 'react';
 import './App.css';
 import type { CharacterSearchResult } from './types/CharacterSearchResult';
-import { searchCharacters } from './api/RickAndMortyAPI';
+import { getCharactersPage, searchCharacters } from './api/RickAndMortyAPI';
 import { ChracterCard } from './components/ChracterCard';
+import { Pagination } from './components/Pagination';
 
 const LAST_SEARCH_KEY = 'last_search';
 
 interface AppState {
-  initSearch?: string;
+  lastSearch?: string;
   result?: CharacterSearchResult;
 }
 
@@ -22,7 +23,7 @@ class App extends React.Component<{}, AppState> {
     if (lastSearched !== null) {
       this.state = {
         ...this.state,
-        initSearch: lastSearched,
+        lastSearch: lastSearched,
       };
     }
     this.searchInput = React.createRef();
@@ -32,23 +33,33 @@ class App extends React.Component<{}, AppState> {
     if (
       this.searchInput &&
       this.searchInput.current &&
-      this.state.initSearch !== undefined
+      this.state.lastSearch !== undefined
     ) {
-      this.searchInput.current.value = this.state.initSearch;
+      this.searchInput.current.value = this.state.lastSearch;
     }
     this.handleSearch();
   }
 
   handleSearch = async () => {
-    const query = this.searchInput?.current?.value;
-    if (query !== undefined) {
+    if (this.searchInput?.current?.value !== undefined) {
+      let query = this.searchInput?.current?.value;
+      query = query.trim();
+      this.searchInput.current.value = query;
+
       localStorage.setItem(LAST_SEARCH_KEY, query);
       const result = await searchCharacters(query, 1);
       this.setState((lastState) => ({ ...lastState, result }));
     }
   };
 
+  selectPage = async (url: string) => {
+    const result = await getCharactersPage(url);
+    this.setState((lastState) => ({ ...lastState, result }));
+  };
+
   render() {
+    const { result } = this.state;
+
     return (
       <>
         <section className="top-controls-section">
@@ -58,15 +69,29 @@ class App extends React.Component<{}, AppState> {
 
         <section className="results-section">
           <h3>Results:</h3>
-          {this.state.result === undefined && <span>*No results*</span>}
-          {this.state.result?.error !== undefined && (
-            <span>{this.state.result?.error}</span>
+          {result === undefined && <span>*No results*</span>}
+          {result?.error !== undefined && <span>{result?.error}</span>}
+
+          {result?.info && (
+            <Pagination
+              prevUrl={result.info.prev}
+              nextUrl={result.info.next}
+              onPageSelect={this.selectPage}
+            />
           )}
-          {this.state.result?.results !== undefined &&
-            this.state.result.results.map((item) => (
-              <ChracterCard key={item.id} character={item} />
-            ))}
-          <div className="results-container"></div>
+          <div className="results-container">
+            {result?.results !== undefined &&
+              result.results.map((item) => (
+                <ChracterCard key={item.id} character={item} />
+              ))}
+          </div>
+          {result?.info && (
+            <Pagination
+              prevUrl={result.info.prev}
+              nextUrl={result.info.next}
+              onPageSelect={this.selectPage}
+            />
+          )}
         </section>
       </>
     );

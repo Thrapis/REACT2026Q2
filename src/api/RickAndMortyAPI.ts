@@ -14,4 +14,16 @@ async function searchCharacters(name: string, page: number = 1) {
   }
 }
 
-export { searchCharacters };
+async function getCharactersPage(url: string) {
+  try {
+    const response = await fetch(url);
+
+    const data = await response.json();
+
+    return data as CharacterSearchResult;
+  } catch (error) {
+    console.error('Request Error:', error);
+  }
+}
+
+export { searchCharacters, getCharactersPage };

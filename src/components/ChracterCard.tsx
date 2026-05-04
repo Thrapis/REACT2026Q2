@@ -12,7 +12,7 @@ export class ChracterCard extends React.PureComponent<ChracterCardProps> {
       <article className="character-card">
         <img
           className="character-card-image"
-          src={this.props.character.image}
+          src={`${this.props.character.image}?0`}
         />
         <div className="character-card-info">
           <h4 className="character-card-name">{this.props.character.name}</h4>
