@@ -14,10 +14,10 @@ interface AppState {
   loading: boolean;
 }
 
-class App extends React.Component<{}, AppState> {
+class App extends React.Component<Record<string, never>, AppState> {
   searchInput: React.RefObject<HTMLInputElement | null>;
 
-  constructor(props: {}) {
+  constructor(props: Record<string, never>) {
     super(props);
     this.state = { loading: false };
 
