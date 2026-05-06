@@ -12,6 +12,7 @@ interface AppState {
   lastSearch?: string;
   result?: CharacterSearchResult;
   loading: boolean;
+  firstLoadCompleted?: boolean;
 }
 
 class App extends React.Component<Record<string, never>, AppState> {
@@ -56,13 +57,22 @@ class App extends React.Component<Record<string, never>, AppState> {
       query = query.trim();
       this.searchInput.current.value = query;
 
+      if (this.state.firstLoadCompleted && query === this.state.lastSearch) {
+        return;
+      }
+
       localStorage.setItem(LAST_SEARCH_KEY, query);
 
       this.startLoading();
       const result = await searchCharacters(query, 1);
       this.endLoading();
 
-      this.setState((lastState) => ({ ...lastState, result }));
+      this.setState((lastState) => ({
+        ...lastState,
+        firstLoadCompleted: true,
+        lastSearch: query,
+        result,
+      }));
     }
   };
 
