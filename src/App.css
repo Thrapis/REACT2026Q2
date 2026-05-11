@@ -18,6 +18,16 @@
   gap: 8px;
 }
 
+.app-control-section {
+  padding: 16px;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
 .results-container {
   display: flex;
   flex-direction: column;

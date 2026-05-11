@@ -4,6 +4,7 @@ import { getCharactersPage, searchCharacters } from './api/RickAndMortyAPI';
 import ChracterCard from './components/ChracterCard/ChracterCard';
 import Pagination from './components/Pagination/Pagination';
 import ErrorMessage from './components/ErrorMessage/ErrorMessage';
+import ErrorThrowButton from './components/ErrorThrowButton/ErrorThrowButton';
 import './App.css';
 import loadingSVG from './assets/loading.svg';
 
@@ -145,6 +146,10 @@ class App extends React.Component<Record<string, never>, AppState> {
               onPageSelect={this.handleSelectPage}
             />
           )}
+        </section>
+
+        <section className="app-control-section">
+          <ErrorThrowButton />
         </section>
 
         {loading && (
