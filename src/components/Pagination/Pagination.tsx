@@ -7,7 +7,7 @@ export interface PaginationProps {
   onPageSelect: (url: string) => void;
 }
 
-export class Pagination extends React.Component<PaginationProps> {
+export default class Pagination extends React.Component<PaginationProps> {
   render() {
     const { nextUrl, prevUrl, onPageSelect } = this.props;
 

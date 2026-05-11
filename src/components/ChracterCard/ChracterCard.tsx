@@ -1,12 +1,12 @@
 import React from 'react';
 import './ChracterCard.css';
-import type { CharacterSearchResultEntry } from '../types/CharacterSearchResult';
+import type { CharacterSearchResultEntry } from '../../types/CharacterSearchResult';
 
 export interface ChracterCardProps {
   character: CharacterSearchResultEntry;
 }
 
-export class ChracterCard extends React.PureComponent<ChracterCardProps> {
+export default class ChracterCard extends React.PureComponent<ChracterCardProps> {
   render() {
     return (
       <article className="character-card">

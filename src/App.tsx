@@ -1,9 +1,10 @@
 import React from 'react';
-import './App.css';
 import type { CharacterSearchResult } from './types/CharacterSearchResult';
 import { getCharactersPage, searchCharacters } from './api/RickAndMortyAPI';
-import { ChracterCard } from './components/ChracterCard';
-import { Pagination } from './components/Pagination';
+import ChracterCard from './components/ChracterCard/ChracterCard';
+import Pagination from './components/Pagination/Pagination';
+import ErrorMessage from './components/ErrorMessage/ErrorMessage';
+import './App.css';
 import loadingSVG from './assets/loading.svg';
 
 const LAST_SEARCH_KEY = 'last_search';
@@ -13,14 +14,15 @@ interface AppState {
   result?: CharacterSearchResult;
   loading: boolean;
   firstLoadCompleted?: boolean;
+  error?: string | undefined;
 }
 
 class App extends React.Component<Record<string, never>, AppState> {
   searchInput: React.RefObject<HTMLInputElement | null>;
+  state: AppState = { loading: false };
 
   constructor(props: Record<string, never>) {
     super(props);
-    this.state = { loading: false };
 
     const lastSearched = localStorage.getItem(LAST_SEARCH_KEY);
     if (lastSearched !== null) {
@@ -64,28 +66,46 @@ class App extends React.Component<Record<string, never>, AppState> {
       localStorage.setItem(LAST_SEARCH_KEY, query);
 
       this.startLoading();
-      const result = await searchCharacters(query, 1);
-      this.endLoading();
-
-      this.setState((lastState) => ({
-        ...lastState,
-        firstLoadCompleted: true,
-        lastSearch: query,
-        result,
-      }));
+      try {
+        const result = await searchCharacters(query, 1);
+        this.setState({
+          firstLoadCompleted: true,
+          lastSearch: query,
+          result,
+          error: undefined,
+        });
+      } catch (err: unknown) {
+        this.setState({
+          error: err instanceof Error ? err.message : 'Something went wrong',
+          result: undefined,
+        });
+      } finally {
+        this.endLoading();
+      }
     }
   };
 
-  selectPage = async (url: string) => {
+  handleSelectPage = async (url: string) => {
     this.startLoading();
-    const result = await getCharactersPage(url);
-    this.endLoading();
-
-    this.setState((lastState) => ({ ...lastState, result }));
+    try {
+      const result = await getCharactersPage(url);
+      this.setState((lastState) => ({
+        ...lastState,
+        result,
+        error: undefined,
+      }));
+    } catch (err: unknown) {
+      this.setState({
+        error: err instanceof Error ? err.message : 'Something went wrong',
+        result: undefined,
+      });
+    } finally {
+      this.endLoading();
+    }
   };
 
   render() {
-    const { loading, result } = this.state;
+    const { loading, result, error } = this.state;
 
     return (
       <>
@@ -95,15 +115,21 @@ class App extends React.Component<Record<string, never>, AppState> {
         </section>
 
         <section className="results-section">
-          <h3>Results:</h3>
-          {result === undefined && <span>*No results*</span>}
-          {result?.error !== undefined && <span>{result?.error}</span>}
+          {error === undefined && <h3>Results:</h3>}
+
+          {result === undefined && error === undefined && (
+            <span>*No results*</span>
+          )}
+
+          {error !== undefined && (
+            <ErrorMessage message={error} onRetry={this.handleSearch} />
+          )}
 
           {result?.info && (
             <Pagination
               prevUrl={result.info.prev}
               nextUrl={result.info.next}
-              onPageSelect={this.selectPage}
+              onPageSelect={this.handleSelectPage}
             />
           )}
           <div className="results-container">
@@ -116,7 +142,7 @@ class App extends React.Component<Record<string, never>, AppState> {
             <Pagination
               prevUrl={result.info.prev}
               nextUrl={result.info.next}
-              onPageSelect={this.selectPage}
+              onPageSelect={this.handleSelectPage}
             />
           )}
         </section>
