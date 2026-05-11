@@ -1,7 +1,28 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-describe('Example', () => {
-  it('checks if one is one', () => {
-    expect(1).toBe(1);
+const mockRender = vi.fn();
+const mockCreateRoot = vi.fn().mockReturnValue({ render: mockRender });
+
+vi.mock('react-dom/client', async () => {
+  const actual = await vi.importActual('react-dom/client');
+  return {
+    ...actual,
+    createRoot: mockCreateRoot,
+  };
+});
+
+describe('should render application in root element', () => {
+  beforeEach(() => {
+    document.body.innerHTML = '<div id="root"></div>';
+    vi.resetModules();
+  });
+
+  it('should render application in root element', async () => {
+    await import('./main.tsx');
+
+    const rootElement = document.getElementById('root');
+
+    expect(mockCreateRoot).toHaveBeenCalledWith(rootElement);
+    expect(mockRender).toHaveBeenCalled();
   });
 });
