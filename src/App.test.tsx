@@ -43,13 +43,13 @@ describe('App Component', () => {
     });
   });
 
-  it('should write search query in localStorage', async () => {
+  it('should write search query in localStorage with trimming', async () => {
     render(<App />);
 
     const input = screen.getByRole('textbox');
     const searchButton = screen.getByRole('button', { name: 'Search' });
 
-    fireEvent.change(input, { target: { value: 'Morty' } });
+    fireEvent.change(input, { target: { value: ' Morty       ' } });
     fireEvent.click(searchButton);
 
     await waitFor(() => {
