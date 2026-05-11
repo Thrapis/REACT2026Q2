@@ -43,6 +43,22 @@ describe('App Component', () => {
     });
   });
 
+  it('should write search query in localStorage', async () => {
+    render(<App />);
+
+    const input = screen.getByRole('textbox');
+    const searchButton = screen.getByRole('button', { name: 'Search' });
+
+    fireEvent.change(input, { target: { value: 'Morty' } });
+    fireEvent.click(searchButton);
+
+    await waitFor(() => {
+      expect(api.searchCharacters).toHaveBeenCalled();
+    });
+
+    expect(localStorage.getItem('last_search')).toBe('Morty');
+  });
+
   it('should show loading indicator', async () => {
     vi.mocked(api.searchCharacters).mockReturnValue(new Promise(() => {}));
 
