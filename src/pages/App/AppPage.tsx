@@ -5,7 +5,7 @@ import ChracterCard from '../../components/ChracterCard/ChracterCard';
 import Pagination from '../../components/Pagination/Pagination';
 import ErrorMessage from '../../components/ErrorMessage/ErrorMessage';
 import ErrorThrowButton from '../../components/ErrorThrowButton/ErrorThrowButton';
-import { Outlet, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, Outlet, useNavigate, useSearchParams } from 'react-router-dom';
 import './AppPage.css';
 import loadingSVG from '@/assets/loading.svg';
 
@@ -97,6 +97,10 @@ export default function Page() {
 
   return (
     <>
+      <nav className="navigation">
+        <Link to={'/about'}>About</Link>
+      </nav>
+
       <section className="top-controls-section">
         <input type="text" ref={searchInput} />
         <button onClick={handleSearch}>Search</button>
