@@ -1,12 +1,12 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { MemoryRouter } from 'react-router-dom';
 import App from './App';
 import * as api from './api/RickAndMortyAPI';
 import type { CharacterSearchResult } from './types/CharacterSearchResult';
 
 vi.mock('./api/RickAndMortyAPI', () => ({
   searchCharacters: vi.fn(),
-  getCharactersPage: vi.fn(),
 }));
 
 describe('App Component', () => {
@@ -30,10 +30,18 @@ describe('App Component', () => {
     vi.mocked(api.searchCharacters).mockResolvedValue(mockData);
   });
 
+  const renderApp = () => {
+    return render(
+      <MemoryRouter>
+        <App />
+      </MemoryRouter>
+    );
+  };
+
   it('should load data from localStorage on start', async () => {
     localStorage.setItem('last_search', 'Morty');
 
-    render(<App />);
+    renderApp();
 
     const input = screen.getByRole('textbox') as HTMLInputElement;
     expect(input.value).toBe('Morty');
@@ -44,7 +52,7 @@ describe('App Component', () => {
   });
 
   it('should write search query in localStorage with trimming', async () => {
-    render(<App />);
+    renderApp();
 
     const input = screen.getByRole('textbox');
     const searchButton = screen.getByRole('button', { name: 'Search' });
@@ -62,20 +70,21 @@ describe('App Component', () => {
   it('should show loading indicator', async () => {
     vi.mocked(api.searchCharacters).mockReturnValue(new Promise(() => {}));
 
-    render(<App />);
+    renderApp();
 
     const searchButton = screen.getByRole('button', { name: 'Search' });
     fireEvent.click(searchButton);
 
-    const loader = document.querySelector('.loading-indicator');
+    const loader = screen.getByRole('img');
     expect(loader).toBeInTheDocument();
+    expect(loader).toHaveClass('loading-indicator');
   });
 
   it('should show error message if API returned Error', async () => {
     const errorText = 'API Error';
     vi.mocked(api.searchCharacters).mockRejectedValue(new Error(errorText));
 
-    render(<App />);
+    renderApp();
 
     const searchButton = screen.getByRole('button', { name: 'Search' });
     fireEvent.click(searchButton);
@@ -86,7 +95,7 @@ describe('App Component', () => {
   });
 
   it('should update list of results on succesed API call', async () => {
-    render(<App />);
+    renderApp();
 
     const input = screen.getByRole('textbox');
     const searchButton = screen.getByRole('button', { name: 'Search' });
@@ -100,7 +109,7 @@ describe('App Component', () => {
   });
 
   it('should stop search if repeated query', async () => {
-    render(<App />);
+    renderApp();
 
     await waitFor(() => {
       expect(api.searchCharacters).toHaveBeenCalled();
