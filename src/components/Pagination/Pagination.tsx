@@ -1,32 +1,47 @@
 import './Pagination.css';
 
 export interface PaginationProps {
-  nextUrl: string | null;
-  prevUrl: string | null;
-  onPageSelect: (url: string) => void;
+  current: number;
+  pages: number;
+  onPageSelect: (page: number) => void;
 }
 
 export default function Pagination({
-  nextUrl,
-  prevUrl,
+  current,
+  pages,
   onPageSelect,
 }: PaginationProps) {
+  const hasPrev = current - 1 >= 1;
+  const hasNext = current + 1 <= pages;
+  const pagesArray = Array.from({ length: pages }, (_v, k) => k + 1);
+
   return (
-    <div className="pagination">
+    <nav className="pagination">
       <button
         className="pagination-button"
-        onClick={() => prevUrl && onPageSelect(prevUrl)}
-        disabled={prevUrl === null}
+        onClick={() => hasPrev && onPageSelect(current - 1)}
+        disabled={!hasPrev}
       >
         Prev
       </button>
+
+      {pagesArray.map((page: number) => (
+        <button
+          key={page}
+          className={`pagination-button ${current === page ? 'current' : ''}`}
+          onClick={() => current !== page && onPageSelect(page)}
+        >
+          {page}
+        </button>
+      ))}
+
       <button
         className="pagination-button"
-        onClick={() => nextUrl && onPageSelect(nextUrl)}
-        disabled={nextUrl === null}
+        onClick={() => hasNext && onPageSelect(current + 1)}
+        disabled={!hasNext}
       >
         Next
       </button>
-    </div>
+    </nav>
   );
 }

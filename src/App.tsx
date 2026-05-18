@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { CharacterSearchResult } from './types/CharacterSearchResult';
-import { getCharactersPage, searchCharacters } from './api/RickAndMortyAPI';
+import { searchCharacters } from './api/RickAndMortyAPI';
 import ChracterCard from './components/ChracterCard/ChracterCard';
 import Pagination from './components/Pagination/Pagination';
 import ErrorMessage from './components/ErrorMessage/ErrorMessage';
@@ -14,16 +14,17 @@ export default function App() {
   const searchInput = useRef<HTMLInputElement>(null);
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [lastSearch, setLastSearch] = useState<string | undefined>(() => {
+  const [lastSearch, setLastSearch] = useState<string>(() => {
     const savedLastSearch = localStorage.getItem(LAST_SEARCH_KEY);
     if (savedLastSearch !== null) {
       return savedLastSearch;
     }
-    return undefined;
+    return '';
   });
   const [result, setResult] = useState<CharacterSearchResult | undefined>(
     undefined
   );
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const [firstLoadCompleted, setFirstLoadCompleted] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>(undefined);
 
@@ -39,10 +40,12 @@ export default function App() {
 
       localStorage.setItem(LAST_SEARCH_KEY, query);
 
-      searchCharacters(query, 1)
+      const page = 1;
+      searchCharacters(query, page)
         .then((result: CharacterSearchResult) => {
           setFirstLoadCompleted(true);
           setLastSearch(query);
+          setCurrentPage(page);
           setResult(result);
           setError(undefined);
         })
@@ -63,13 +66,14 @@ export default function App() {
     search();
   };
 
-  const handleSelectPage = async (url: string) => {
+  const handleSelectPage = async (page: number) => {
     setIsLoading(true);
 
-    getCharactersPage(url)
+    searchCharacters(lastSearch, page)
       .then((result: CharacterSearchResult) => {
+        setCurrentPage(page);
         setResult(result);
-        setError(error);
+        setError(undefined);
       })
       .catch((err: unknown) => {
         const error =
@@ -109,8 +113,8 @@ export default function App() {
 
         {result?.info && (
           <Pagination
-            prevUrl={result.info.prev}
-            nextUrl={result.info.next}
+            current={currentPage}
+            pages={result.info.pages}
             onPageSelect={handleSelectPage}
           />
         )}
@@ -122,8 +126,8 @@ export default function App() {
         </div>
         {result?.info && (
           <Pagination
-            prevUrl={result.info.prev}
-            nextUrl={result.info.next}
+            current={currentPage}
+            pages={result.info.pages}
             onPageSelect={handleSelectPage}
           />
         )}
