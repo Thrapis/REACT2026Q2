@@ -6,6 +6,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import AppPage from './pages/App/AppPage.tsx';
 import DetailsPage from './pages/Details/DetailsPage.tsx';
 import AboutPage from './pages/About/AboutPage.tsx';
+import NotFoundPage from './pages/NotFound/NotFoundPage.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -17,6 +18,7 @@ createRoot(document.getElementById('root')!).render(
             <Route path="/details/:id" element={<DetailsPage />} />
           </Route>
           <Route path="/about" element={<AboutPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>
     </ErrorBoundary>
