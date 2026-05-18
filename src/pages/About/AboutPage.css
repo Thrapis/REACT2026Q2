@@ -1,0 +1,34 @@
+.about-section {
+  margin: auto;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.about-block {
+  padding: 16px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+
+  border: solid 2px black;
+  border-radius: 16px;
+}
+
+.about-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.about-row {
+  width: 240px;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}

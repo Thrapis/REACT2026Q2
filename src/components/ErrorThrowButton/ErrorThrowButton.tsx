@@ -1,34 +1,20 @@
-import React from 'react';
+import { useState } from 'react';
 import './ErrorThrowButton.css';
 
-interface ErrorThrowButtonProps {
-  shouldThrowError: boolean;
-}
+export default function ErrorThrowButton() {
+  const [shouldThrowError, setShouldThrowError] = useState<boolean>(false);
 
-export default class ErrorThrowButton extends React.Component<
-  Record<string, never>,
-  ErrorThrowButtonProps
-> {
-  state: ErrorThrowButtonProps = {
-    shouldThrowError: false,
+  const handleOrderErrorThrow = (): void => {
+    setShouldThrowError(true);
   };
 
-  handleOrderErrorThrow = (): void => {
-    this.setState({ shouldThrowError: true });
-  };
-
-  render() {
-    if (this.state.shouldThrowError) {
-      throw new Error('Manual throwed error');
-    }
-
-    return (
-      <button
-        className="error-throw-button"
-        onClick={this.handleOrderErrorThrow}
-      >
-        Throw Error
-      </button>
-    );
+  if (shouldThrowError) {
+    throw new Error('Manual throwed error');
   }
+
+  return (
+    <button className="error-throw-button" onClick={handleOrderErrorThrow}>
+      Throw Error
+    </button>
+  );
 }

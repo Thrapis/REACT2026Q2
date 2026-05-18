@@ -1,3 +1,9 @@
+.navigation {
+  padding: 8px;
+
+  display: flex;
+}
+
 .top-controls-section {
   padding: 16px;
 
@@ -5,7 +11,7 @@
   align-items: center;
   justify-content: center;
 
-  border-bottom: solid 1px black;
+  border-block: solid 1px black;
 }
 
 .results-section {
@@ -13,9 +19,27 @@
   padding: 8px;
 
   display: flex;
+  flex-direction: row;
+  align-items: start;
+  gap: 32px;
+}
+
+.search-results {
+  flex: 1;
+  padding: 8px;
+
+  display: flex;
   flex-direction: column;
   align-items: center;
   gap: 8px;
+}
+
+.details-side {
+  overflow: clip;
+
+  &:not(:empty) {
+    flex-basis: 50%;
+  }
 }
 
 .app-control-section {
