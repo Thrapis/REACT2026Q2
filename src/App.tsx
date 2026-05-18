@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { CharacterSearchResult } from './types/CharacterSearchResult';
 import { getCharactersPage, searchCharacters } from './api/RickAndMortyAPI';
 import ChracterCard from './components/ChracterCard/ChracterCard';
@@ -10,156 +10,134 @@ import loadingSVG from './assets/loading.svg';
 
 const LAST_SEARCH_KEY = 'last_search';
 
-interface AppState {
-  lastSearch?: string;
-  result?: CharacterSearchResult;
-  loading: boolean;
-  firstLoadCompleted?: boolean;
-  error?: string | undefined;
-}
+export default function App() {
+  const searchInput = useRef<HTMLInputElement>(null);
 
-class App extends React.Component<Record<string, never>, AppState> {
-  searchInput: React.RefObject<HTMLInputElement | null>;
-  state: AppState = { loading: false };
-
-  constructor(props: Record<string, never>) {
-    super(props);
-
-    const lastSearched = localStorage.getItem(LAST_SEARCH_KEY);
-    if (lastSearched !== null) {
-      this.state = {
-        ...this.state,
-        lastSearch: lastSearched,
-      };
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [lastSearch, setLastSearch] = useState<string | undefined>(() => {
+    const savedLastSearch = localStorage.getItem(LAST_SEARCH_KEY);
+    if (savedLastSearch !== null) {
+      return savedLastSearch;
     }
-    this.searchInput = React.createRef();
-  }
+    return undefined;
+  });
+  const [result, setResult] = useState<CharacterSearchResult | undefined>(
+    undefined
+  );
+  const [firstLoadCompleted, setFirstLoadCompleted] = useState<boolean>(false);
+  const [error, setError] = useState<string | undefined>(undefined);
 
-  componentDidMount(): void {
-    if (
-      this.searchInput &&
-      this.searchInput.current &&
-      this.state.lastSearch !== undefined
-    ) {
-      this.searchInput.current.value = this.state.lastSearch;
-    }
-    this.handleSearch();
-  }
-
-  startLoading = () => {
-    this.setState((lastState) => ({ ...lastState, loading: true }));
-  };
-
-  endLoading = () => {
-    this.setState((lastState) => ({ ...lastState, loading: false }));
-  };
-
-  handleSearch = async () => {
-    if (this.searchInput?.current?.value !== undefined) {
-      let query = this.searchInput?.current?.value;
+  const search = async () => {
+    if (searchInput?.current?.value !== undefined) {
+      let query = searchInput?.current?.value;
       query = query.trim();
-      this.searchInput.current.value = query;
+      searchInput.current.value = query;
 
-      if (this.state.firstLoadCompleted && query === this.state.lastSearch) {
+      if (firstLoadCompleted && query === lastSearch) {
         return;
       }
 
       localStorage.setItem(LAST_SEARCH_KEY, query);
 
-      this.startLoading();
-      try {
-        const result = await searchCharacters(query, 1);
-        this.setState({
-          firstLoadCompleted: true,
-          lastSearch: query,
-          result,
-          error: undefined,
+      searchCharacters(query, 1)
+        .then((result: CharacterSearchResult) => {
+          setFirstLoadCompleted(true);
+          setLastSearch(query);
+          setResult(result);
+          setError(undefined);
+        })
+        .catch((err: unknown) => {
+          const error =
+            err instanceof Error ? err.message : 'Something went wrong';
+          setResult(undefined);
+          setError(error);
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
-      } catch (err: unknown) {
-        this.setState({
-          error: err instanceof Error ? err.message : 'Something went wrong',
-          result: undefined,
-        });
-      } finally {
-        this.endLoading();
-      }
     }
   };
 
-  handleSelectPage = async (url: string) => {
-    this.startLoading();
-    try {
-      const result = await getCharactersPage(url);
-      this.setState((lastState) => ({
-        ...lastState,
-        result,
-        error: undefined,
-      }));
-    } catch (err: unknown) {
-      this.setState({
-        error: err instanceof Error ? err.message : 'Something went wrong',
-        result: undefined,
+  const handleSearch = async () => {
+    setIsLoading(true);
+    search();
+  };
+
+  const handleSelectPage = async (url: string) => {
+    setIsLoading(true);
+
+    getCharactersPage(url)
+      .then((result: CharacterSearchResult) => {
+        setResult(result);
+        setError(error);
+      })
+      .catch((err: unknown) => {
+        const error =
+          err instanceof Error ? err.message : 'Something went wrong';
+        setResult(undefined);
+        setError(error);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
-    } finally {
-      this.endLoading();
-    }
   };
 
-  render() {
-    const { loading, result, error } = this.state;
+  useEffect(() => {
+    if (searchInput.current && lastSearch) {
+      searchInput.current.value = lastSearch;
+    }
+    search();
+  }, []);
 
-    return (
-      <>
-        <section className="top-controls-section">
-          <input type="text" ref={this.searchInput} />
-          <button onClick={this.handleSearch}>Search</button>
-        </section>
+  return (
+    <>
+      <section className="top-controls-section">
+        <input type="text" ref={searchInput} />
+        <button onClick={handleSearch}>Search</button>
+      </section>
 
-        <section className="results-section">
-          {error === undefined && <h3>Results:</h3>}
+      <section className="results-section">
+        {error === undefined && <h3>Results:</h3>}
 
-          {result === undefined && error === undefined && (
-            <span>*No results*</span>
-          )}
-
-          {error !== undefined && (
-            <ErrorMessage message={error} onRetry={this.handleSearch} />
-          )}
-
-          {result?.info && (
-            <Pagination
-              prevUrl={result.info.prev}
-              nextUrl={result.info.next}
-              onPageSelect={this.handleSelectPage}
-            />
-          )}
-          <div className="results-container">
-            {result?.results !== undefined &&
-              result.results.map((item) => (
-                <ChracterCard key={item.id} character={item} />
-              ))}
-          </div>
-          {result?.info && (
-            <Pagination
-              prevUrl={result.info.prev}
-              nextUrl={result.info.next}
-              onPageSelect={this.handleSelectPage}
-            />
-          )}
-        </section>
-
-        <section className="app-control-section">
-          <ErrorThrowButton />
-        </section>
-
-        {loading && (
-          <div className="loading-space">
-            <img className="loading-indicator" src={loadingSVG} />
-          </div>
+        {result === undefined && error === undefined && (
+          <span>*No results*</span>
         )}
-      </>
-    );
-  }
-}
 
-export default App;
+        {error !== undefined && (
+          <ErrorMessage message={error} onRetry={handleSearch} />
+        )}
+
+        {result?.info && (
+          <Pagination
+            prevUrl={result.info.prev}
+            nextUrl={result.info.next}
+            onPageSelect={handleSelectPage}
+          />
+        )}
+        <div className="results-container">
+          {result?.results !== undefined &&
+            result.results.map((item) => (
+              <ChracterCard key={item.id} character={item} />
+            ))}
+        </div>
+        {result?.info && (
+          <Pagination
+            prevUrl={result.info.prev}
+            nextUrl={result.info.next}
+            onPageSelect={handleSelectPage}
+          />
+        )}
+      </section>
+
+      <section className="app-control-section">
+        <ErrorThrowButton />
+      </section>
+
+      {isLoading && (
+        <div className="loading-space">
+          <img className="loading-indicator" src={loadingSVG} />
+        </div>
+      )}
+    </>
+  );
+}

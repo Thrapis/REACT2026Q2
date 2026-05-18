@@ -1,4 +1,3 @@
-import React from 'react';
 import './Pagination.css';
 
 export interface PaginationProps {
@@ -7,27 +6,27 @@ export interface PaginationProps {
   onPageSelect: (url: string) => void;
 }
 
-export default class Pagination extends React.Component<PaginationProps> {
-  render() {
-    const { nextUrl, prevUrl, onPageSelect } = this.props;
-
-    return (
-      <div className="pagination">
-        <button
-          className="pagination-button"
-          onClick={() => prevUrl && onPageSelect(prevUrl)}
-          disabled={prevUrl === null}
-        >
-          Prev
-        </button>
-        <button
-          className="pagination-button"
-          onClick={() => nextUrl && onPageSelect(nextUrl)}
-          disabled={nextUrl === null}
-        >
-          Next
-        </button>
-      </div>
-    );
-  }
+export default function Pagination({
+  nextUrl,
+  prevUrl,
+  onPageSelect,
+}: PaginationProps) {
+  return (
+    <div className="pagination">
+      <button
+        className="pagination-button"
+        onClick={() => prevUrl && onPageSelect(prevUrl)}
+        disabled={prevUrl === null}
+      >
+        Prev
+      </button>
+      <button
+        className="pagination-button"
+        onClick={() => nextUrl && onPageSelect(nextUrl)}
+        disabled={nextUrl === null}
+      >
+        Next
+      </button>
+    </div>
+  );
 }

@@ -1,28 +1,22 @@
-import React from 'react';
-import './ChracterCard.css';
 import type { CharacterSearchResultEntry } from '../../types/CharacterSearchResult';
+import './ChracterCard.css';
 
 export interface ChracterCardProps {
   character: CharacterSearchResultEntry;
 }
 
-export default class ChracterCard extends React.PureComponent<ChracterCardProps> {
-  render() {
-    return (
-      <article className="character-card">
-        <img
-          className="character-card-image"
-          src={`${this.props.character.image}?0`}
-        />
-        <div className="character-card-info">
-          <h4 className="character-card-name">{this.props.character.name}</h4>
-          <div className="character-card-description">
-            <span>Species: {this.props.character.species}</span>
-            <span>Gender: {this.props.character.gender}</span>
-            <span>Status: {this.props.character.status}</span>
-          </div>
+export default function ChracterCard({ character }: ChracterCardProps) {
+  return (
+    <article className="character-card">
+      <img className="character-card-image" src={`${character.image}?0`} />
+      <div className="character-card-info">
+        <h4 className="character-card-name">{character.name}</h4>
+        <div className="character-card-description">
+          <span>Species: {character.species}</span>
+          <span>Gender: {character.gender}</span>
+          <span>Status: {character.status}</span>
         </div>
-      </article>
-    );
-  }
+      </div>
+    </article>
+  );
 }
