@@ -1,11 +1,11 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
-import App from './App';
-import * as api from './api/RickAndMortyAPI';
-import type { CharacterSearchResult } from './types/CharacterSearchResult';
+import AppPage from './AppPage';
+import * as api from '../../api/RickAndMortyAPI';
+import type { CharacterSearchResult } from '../../types/CharacterSearchResult';
 
-vi.mock('./api/RickAndMortyAPI', () => ({
+vi.mock('../../api/RickAndMortyAPI', () => ({
   searchCharacters: vi.fn(),
 }));
 
@@ -33,7 +33,7 @@ describe('App Component', () => {
   const renderApp = () => {
     return render(
       <MemoryRouter>
-        <App />
+        <AppPage />
       </MemoryRouter>
     );
   };

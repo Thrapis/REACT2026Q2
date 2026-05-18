@@ -1,4 +1,7 @@
-import type { CharacterSearchResult } from '../types/CharacterSearchResult';
+import type {
+  CharacterSearchResult,
+  CharacterSearchResultEntry,
+} from '../types/CharacterSearchResult';
 
 async function searchCharacters(
   name: string,
@@ -17,6 +20,22 @@ async function searchCharacters(
   return data;
 }
 
+async function getCharacter(
+  id: number = 1
+): Promise<CharacterSearchResultEntry> {
+  const url = `https://rickandmortyapi.com/api/character/${id}`;
+
+  const response = await fetch(url);
+
+  const data = (await response.json()) as CharacterSearchResultEntry;
+
+  if (!response.ok) {
+    throw new Error('Could not load character data');
+  }
+
+  return data;
+}
+
 async function getCharactersPage(url: string): Promise<CharacterSearchResult> {
   const response = await fetch(url);
 
@@ -29,4 +48,4 @@ async function getCharactersPage(url: string): Promise<CharacterSearchResult> {
   return data;
 }
 
-export { searchCharacters, getCharactersPage };
+export { searchCharacters, getCharacter, getCharactersPage };

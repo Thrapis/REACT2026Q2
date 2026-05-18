@@ -1,18 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
-import type { CharacterSearchResult } from './types/CharacterSearchResult';
-import { searchCharacters } from './api/RickAndMortyAPI';
-import ChracterCard from './components/ChracterCard/ChracterCard';
-import Pagination from './components/Pagination/Pagination';
-import ErrorMessage from './components/ErrorMessage/ErrorMessage';
-import ErrorThrowButton from './components/ErrorThrowButton/ErrorThrowButton';
-import { useSearchParams } from 'react-router-dom';
-import './App.css';
-import loadingSVG from './assets/loading.svg';
+import type { CharacterSearchResult } from '../../types/CharacterSearchResult';
+import { searchCharacters } from '../../api/RickAndMortyAPI';
+import ChracterCard from '../../components/ChracterCard/ChracterCard';
+import Pagination from '../../components/Pagination/Pagination';
+import ErrorMessage from '../../components/ErrorMessage/ErrorMessage';
+import ErrorThrowButton from '../../components/ErrorThrowButton/ErrorThrowButton';
+import { Outlet, useNavigate, useSearchParams } from 'react-router-dom';
+import './AppPage.css';
+import loadingSVG from '@/assets/loading.svg';
 
 const LAST_SEARCH_KEY = 'last_search';
 
-export default function App() {
+export default function Page() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   const searchInput = useRef<HTMLInputElement>(null);
 
@@ -36,7 +37,7 @@ export default function App() {
   const [firstLoadCompleted, setFirstLoadCompleted] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>(undefined);
 
-  const search = async (query: string, page: number) => {
+  const search = (query: string, page: number) => {
     searchCharacters(query, page)
       .then((result: CharacterSearchResult) => {
         setFirstLoadCompleted(true);
@@ -61,7 +62,7 @@ export default function App() {
       });
   };
 
-  const handleSearch = async () => {
+  const handleSearch = () => {
     if (searchInput?.current?.value !== undefined) {
       let query = searchInput?.current?.value;
       query = query.trim();
@@ -78,9 +79,13 @@ export default function App() {
     }
   };
 
-  const handleSelectPage = async (page: number) => {
+  const handleSelectPage = (page: number) => {
     setIsLoading(true);
     search(lastSearch, page);
+  };
+
+  const handleSelectCharacter = (characterId: number) => {
+    navigate(`/details/${characterId}?${searchParams.toString()}`);
   };
 
   useEffect(() => {
@@ -98,36 +103,45 @@ export default function App() {
       </section>
 
       <section className="results-section">
-        {error === undefined && <h3>Results:</h3>}
+        <div className="search-results">
+          {error === undefined && <h3>Results:</h3>}
 
-        {result === undefined && error === undefined && (
-          <span>*No results*</span>
-        )}
+          {result === undefined && error === undefined && (
+            <span>*No results*</span>
+          )}
 
-        {error !== undefined && (
-          <ErrorMessage message={error} onRetry={handleSearch} />
-        )}
+          {error !== undefined && (
+            <ErrorMessage message={error} onRetry={handleSearch} />
+          )}
 
-        {result?.info && (
-          <Pagination
-            current={currentPage}
-            pages={result.info.pages}
-            onPageSelect={handleSelectPage}
-          />
-        )}
-        <div className="results-container">
-          {result?.results !== undefined &&
-            result.results.map((item) => (
-              <ChracterCard key={item.id} character={item} />
-            ))}
+          {result?.info && (
+            <Pagination
+              current={currentPage}
+              pages={result.info.pages}
+              onPageSelect={handleSelectPage}
+            />
+          )}
+          <div className="results-container">
+            {result?.results !== undefined &&
+              result.results.map((item) => (
+                <ChracterCard
+                  key={item.id}
+                  character={item}
+                  onCharacterSelect={handleSelectCharacter}
+                />
+              ))}
+          </div>
+          {result?.info && (
+            <Pagination
+              current={currentPage}
+              pages={result.info.pages}
+              onPageSelect={handleSelectPage}
+            />
+          )}
         </div>
-        {result?.info && (
-          <Pagination
-            current={currentPage}
-            pages={result.info.pages}
-            onPageSelect={handleSelectPage}
-          />
-        )}
+        <div className="details-side">
+          <Outlet />
+        </div>
       </section>
 
       <section className="app-control-section">
