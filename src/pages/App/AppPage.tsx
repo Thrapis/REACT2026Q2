@@ -8,10 +8,14 @@ import ErrorThrowButton from '../../components/ErrorThrowButton/ErrorThrowButton
 import { Link, Outlet, useNavigate, useSearchParams } from 'react-router-dom';
 import './AppPage.css';
 import loadingSVG from '@/assets/loading.svg';
+import useLocalStorage from '../../hooks/useLocalStorage';
 
 const LAST_SEARCH_KEY = 'last_search';
 
-export default function Page() {
+export default function AppPage() {
+  const [storageSearchValue, setStorageSearchValue] =
+    useLocalStorage(LAST_SEARCH_KEY);
+
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
@@ -23,10 +27,8 @@ export default function Page() {
     if (queryFromParams) {
       return queryFromParams;
     }
-
-    const savedLastSearch = localStorage.getItem(LAST_SEARCH_KEY);
-    if (savedLastSearch !== null) {
-      return savedLastSearch;
+    if (storageSearchValue !== null) {
+      return storageSearchValue;
     }
     return '';
   });
@@ -72,7 +74,7 @@ export default function Page() {
         return;
       }
 
-      localStorage.setItem(LAST_SEARCH_KEY, query);
+      setStorageSearchValue(query);
 
       setIsLoading(true);
       search(query, 1);
