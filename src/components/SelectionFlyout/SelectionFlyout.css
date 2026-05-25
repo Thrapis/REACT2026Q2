@@ -47,12 +47,20 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 8px;
 
   border-radius: 8px;
 
   &:hover {
     background-color: aliceblue;
   }
+}
+
+.selection-flyout-item-name {
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  text-wrap: nowrap;
+  max-width: 240px;
 }
 
 .selection-flyout-item button {
