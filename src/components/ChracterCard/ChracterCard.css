@@ -15,6 +15,13 @@
   }
 }
 
+.character-card-checkbox {
+  cursor: pointer;
+
+  height: 32px;
+  width: 32px;
+}
+
 .character-card-image {
   height: 80px;
   width: 80px;
@@ -34,4 +41,6 @@
   margin: 0;
 
   font-size: 24px;
+
+  user-select: none;
 }

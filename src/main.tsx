@@ -7,6 +7,7 @@ import AppPage from './pages/App/AppPage.tsx';
 import DetailsPage from './pages/Details/DetailsPage.tsx';
 import AboutPage from './pages/About/AboutPage.tsx';
 import NotFoundPage from './pages/NotFound/NotFoundPage.tsx';
+import SelectionFlyout from './components/SelectionFlyout/SelectionFlyout.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -20,6 +21,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/about" element={<AboutPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
+        <SelectionFlyout />
       </BrowserRouter>
     </ErrorBoundary>
   </StrictMode>
