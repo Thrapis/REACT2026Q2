@@ -5,8 +5,11 @@ import { getCharacter } from '../../api/RickAndMortyAPI';
 
 import './DetailsPage.css';
 import loadingSVG from '@/assets/loading.svg';
+import { useTheme } from '../../hooks/UseTheme';
 
 export default function DetailsPage() {
+  const { theme } = useTheme();
+
   const { id } = useParams<{ id: string }>();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -32,7 +35,7 @@ export default function DetailsPage() {
   }, [id]);
 
   return (
-    <section className="details-section">
+    <section className={`details-section ${theme}`}>
       <h3>Details:</h3>
       <nav className="details-navigation">
         <button

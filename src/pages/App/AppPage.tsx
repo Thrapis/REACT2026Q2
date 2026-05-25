@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
-import { Link, Outlet, useNavigate, useSearchParams } from 'react-router-dom';
-import useLocalStorage from '../../hooks/useLocalStorage';
+import { Outlet, useNavigate, useSearchParams } from 'react-router-dom';
+import useLocalStorage from '../../hooks/UseLocalStorage';
 import { useCharacterStore } from '../../stores/Character.store';
 
 import ChracterCard from '../../components/ChracterCard/ChracterCard';
@@ -10,10 +10,13 @@ import ErrorThrowButton from '../../components/ErrorThrowButton/ErrorThrowButton
 
 import './AppPage.css';
 import loadingSVG from '@/assets/loading.svg';
+import { useTheme } from '../../hooks/UseTheme';
 
 const LAST_SEARCH_KEY = 'last_search';
 
 export default function AppPage() {
+  const { theme } = useTheme();
+
   const [storageSearchValue, setStorageSearchValue] =
     useLocalStorage(LAST_SEARCH_KEY);
 
@@ -44,7 +47,7 @@ export default function AppPage() {
       const query = searchInput?.current?.value.trim();
       searchInput.current.value = query;
 
-      if (firstLoadCompleted && query === lastSearch) {
+      if (firstLoadCompleted && query === lastSearch && error === undefined) {
         return;
       }
 
@@ -81,16 +84,12 @@ export default function AppPage() {
 
   return (
     <>
-      <nav className="navigation">
-        <Link to={'/about'}>About</Link>
-      </nav>
-
-      <section className="top-controls-section">
+      <section className={`top-controls-section ${theme}`}>
         <input type="text" ref={searchInput} />
         <button onClick={handleSearch}>Search</button>
       </section>
 
-      <section className="results-section">
+      <section className={`results-section ${theme}`}>
         <div className="search-results">
           {error === undefined && <h3>Results:</h3>}
 
@@ -132,12 +131,12 @@ export default function AppPage() {
         </div>
       </section>
 
-      <section className="app-control-section">
+      <section className={`app-control-section ${theme}`}>
         <ErrorThrowButton />
       </section>
 
       {isLoading && (
-        <div className="loading-space">
+        <div className={`loading-space ${theme}`}>
           <img className="loading-indicator" src={loadingSVG} />
         </div>
       )}

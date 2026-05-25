@@ -12,6 +12,10 @@
 
   &:hover {
     background-color: aliceblue;
+
+    &.dark {
+      background-color: #2c3f4e;
+    }
   }
 }
 

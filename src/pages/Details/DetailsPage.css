@@ -5,15 +5,18 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 8px;
 }
 
 .details-navigation {
   display: flex;
   flex-direction: row-reverse;
+  justify-content: center;
   width: 100%;
 }
 
 .details-close-button {
+  max-width: 320px;
   height: 40px;
   flex: 1;
 }
@@ -35,10 +38,6 @@
   align-items: center;
 
   border-radius: 16px;
-
-  &:hover {
-    background-color: aliceblue;
-  }
 }
 
 .character-details-image {

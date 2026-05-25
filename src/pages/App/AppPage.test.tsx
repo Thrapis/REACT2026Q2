@@ -5,6 +5,7 @@ import AppPage from './AppPage';
 import * as api from '../../api/RickAndMortyAPI';
 import type { CharacterSearchResult } from '../../types/CharacterSearchResult';
 import { useCharacterStore } from '../../stores/Character.store';
+import { ThemeProvider } from '../../context/Theme/ThemeProvider';
 
 vi.mock('../../api/RickAndMortyAPI', () => ({
   searchCharacters: vi.fn(),
@@ -43,9 +44,11 @@ describe('App Component', () => {
 
   const renderApp = () => {
     return render(
-      <MemoryRouter>
-        <AppPage />
-      </MemoryRouter>
+      <ThemeProvider>
+        <MemoryRouter>
+          <AppPage />
+        </MemoryRouter>
+      </ThemeProvider>
     );
   };
 
