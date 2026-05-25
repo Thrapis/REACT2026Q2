@@ -10,6 +10,7 @@
   border: solid 2px crimson;
   border-radius: 16px;
   background-color: pink;
+  color: black;
 }
 
 .error-fallback h4 {

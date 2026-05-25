@@ -12,7 +12,18 @@
 
   &:hover {
     background-color: aliceblue;
+
+    &.dark {
+      background-color: #2c3f4e;
+    }
   }
+}
+
+.character-card-checkbox {
+  cursor: pointer;
+
+  height: 32px;
+  width: 32px;
 }
 
 .character-card-image {
@@ -34,4 +45,6 @@
   margin: 0;
 
   font-size: 24px;
+
+  user-select: none;
 }

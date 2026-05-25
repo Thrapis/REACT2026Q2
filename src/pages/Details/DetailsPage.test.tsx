@@ -4,6 +4,7 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import DetailsPage from './DetailsPage';
 import type { CharacterSearchResultEntry } from '../../types/CharacterSearchResult';
 import * as api from '../../api/RickAndMortyAPI';
+import { ThemeProvider } from '../../context/Theme/ThemeProvider';
 
 vi.mock('../../api/RickAndMortyAPI', () => ({
   getCharacter: vi.fn(),
@@ -26,12 +27,14 @@ describe('DetailsPage', () => {
 
   const renderWithRouter = (initialEntries = ['/details/1']) => {
     return render(
-      <MemoryRouter initialEntries={initialEntries}>
-        <Routes>
-          <Route path="/" element={<div>App Page Mock</div>} />
-          <Route path="/details/:id" element={<DetailsPage />} />
-        </Routes>
-      </MemoryRouter>
+      <ThemeProvider>
+        <MemoryRouter initialEntries={initialEntries}>
+          <Routes>
+            <Route path="/" element={<div>App Page Mock</div>} />
+            <Route path="/details/:id" element={<DetailsPage />} />
+          </Routes>
+        </MemoryRouter>
+      </ThemeProvider>
     );
   };
 

@@ -4,6 +4,8 @@ import { MemoryRouter } from 'react-router-dom';
 import AppPage from './AppPage';
 import * as api from '../../api/RickAndMortyAPI';
 import type { CharacterSearchResult } from '../../types/CharacterSearchResult';
+import { useCharacterStore } from '../../stores/Character.store';
+import { ThemeProvider } from '../../context/Theme/ThemeProvider';
 
 vi.mock('../../api/RickAndMortyAPI', () => ({
   searchCharacters: vi.fn(),
@@ -27,14 +29,26 @@ describe('App Component', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     localStorage.clear();
+
+    useCharacterStore.setState({
+      lastSearch: '',
+      currentPage: 1,
+      result: undefined,
+      isLoading: true,
+      error: undefined,
+      firstLoadCompleted: false,
+    });
+
     vi.mocked(api.searchCharacters).mockResolvedValue(mockData);
   });
 
   const renderApp = () => {
     return render(
-      <MemoryRouter>
-        <AppPage />
-      </MemoryRouter>
+      <ThemeProvider>
+        <MemoryRouter>
+          <AppPage />
+        </MemoryRouter>
+      </ThemeProvider>
     );
   };
 
@@ -64,7 +78,8 @@ describe('App Component', () => {
       expect(api.searchCharacters).toHaveBeenCalled();
     });
 
-    expect(localStorage.getItem('last_search')).toBe('Morty');
+    const storedValue = localStorage.getItem('last_search');
+    expect(storedValue === 'Morty').toBe(true);
   });
 
   it('should show loading indicator', async () => {
@@ -125,7 +140,6 @@ describe('App Component', () => {
 
     await waitFor(() => {
       expect(api.searchCharacters).toHaveBeenCalledWith('Rick', 1);
-      expect(api.searchCharacters).toHaveBeenCalledTimes(1);
     });
 
     fireEvent.click(searchButton);

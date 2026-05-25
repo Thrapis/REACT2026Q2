@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import useLocalStorage from './useLocalStorage';
+import useLocalStorage from './UseLocalStorage';
 import { act, renderHook } from '@testing-library/react';
 
 const mockLocalStorage = (() => {

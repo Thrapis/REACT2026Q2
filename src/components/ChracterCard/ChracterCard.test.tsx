@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import ChracterCard from './ChracterCard';
 import type { CharacterSearchResultEntry } from '../../types/CharacterSearchResult';
+import { ThemeProvider } from '../../context/Theme/ThemeProvider';
 
 describe('ChracterCard', () => {
   const mockCharacter: CharacterSearchResultEntry = {
@@ -14,7 +15,11 @@ describe('ChracterCard', () => {
   };
 
   it('should show character name and description', () => {
-    render(<ChracterCard character={mockCharacter} />);
+    render(
+      <ThemeProvider>
+        <ChracterCard character={mockCharacter} />
+      </ThemeProvider>
+    );
 
     expect(screen.getByText(mockCharacter.name)).toBeInTheDocument();
 
