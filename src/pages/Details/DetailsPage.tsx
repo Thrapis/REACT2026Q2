@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import type { CharacterSearchResultEntry } from '../../types/CharacterSearchResult';
 import { getCharacter } from '../../api/RickAndMortyAPI';
+
 import './DetailsPage.css';
 import loadingSVG from '@/assets/loading.svg';
 

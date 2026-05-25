@@ -1,14 +1,15 @@
-import { useEffect, useRef, useState } from 'react';
-import type { CharacterSearchResult } from '../../types/CharacterSearchResult';
-import { searchCharacters } from '../../api/RickAndMortyAPI';
+import { useEffect, useRef } from 'react';
+import { Link, Outlet, useNavigate, useSearchParams } from 'react-router-dom';
+import useLocalStorage from '../../hooks/useLocalStorage';
+import { useCharacterStore } from '../../stores/Character.store';
+
 import ChracterCard from '../../components/ChracterCard/ChracterCard';
 import Pagination from '../../components/Pagination/Pagination';
 import ErrorMessage from '../../components/ErrorMessage/ErrorMessage';
 import ErrorThrowButton from '../../components/ErrorThrowButton/ErrorThrowButton';
-import { Link, Outlet, useNavigate, useSearchParams } from 'react-router-dom';
+
 import './AppPage.css';
 import loadingSVG from '@/assets/loading.svg';
-import useLocalStorage from '../../hooks/useLocalStorage';
 
 const LAST_SEARCH_KEY = 'last_search';
 
@@ -18,72 +19,41 @@ export default function AppPage() {
 
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
-
   const searchInput = useRef<HTMLInputElement>(null);
 
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [lastSearch, setLastSearch] = useState<string>(() => {
-    const queryFromParams = searchParams.get('search');
-    if (queryFromParams) {
-      return queryFromParams;
-    }
-    if (storageSearchValue !== null) {
-      return storageSearchValue;
-    }
-    return '';
-  });
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [result, setResult] = useState<CharacterSearchResult | undefined>(
-    undefined
-  );
-  const [firstLoadCompleted, setFirstLoadCompleted] = useState<boolean>(false);
-  const [error, setError] = useState<string | undefined>(undefined);
+  const {
+    lastSearch,
+    currentPage,
+    result,
+    isLoading,
+    error,
+    firstLoadCompleted,
+    search,
+  } = useCharacterStore();
 
-  const search = (query: string, page: number) => {
-    searchCharacters(query, page)
-      .then((result: CharacterSearchResult) => {
-        setFirstLoadCompleted(true);
-        setLastSearch(query);
-        setCurrentPage(page);
-        setResult(result);
-        setError(undefined);
-
-        setSearchParams({
-          search: query,
-          page: `${page}`,
-        });
-      })
-      .catch((err: unknown) => {
-        const error =
-          err instanceof Error ? err.message : 'Something went wrong';
-        setResult(undefined);
-        setError(error);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+  const handleSearchSuccess = (query: string, page: number) => {
+    setStorageSearchValue(query);
+    setSearchParams({
+      search: query,
+      page: `${page}`,
+    });
   };
 
   const handleSearch = () => {
     if (searchInput?.current?.value !== undefined) {
-      let query = searchInput?.current?.value;
-      query = query.trim();
+      const query = searchInput?.current?.value.trim();
       searchInput.current.value = query;
 
       if (firstLoadCompleted && query === lastSearch) {
         return;
       }
 
-      setStorageSearchValue(query);
-
-      setIsLoading(true);
-      search(query, 1);
+      search(query, 1, handleSearchSuccess);
     }
   };
 
   const handleSelectPage = (page: number) => {
-    setIsLoading(true);
-    search(lastSearch, page);
+    search(lastSearch, page, handleSearchSuccess);
   };
 
   const handleSelectCharacter = (characterId: number) => {
@@ -91,10 +61,22 @@ export default function AppPage() {
   };
 
   useEffect(() => {
-    if (searchInput.current && lastSearch) {
-      searchInput.current.value = lastSearch;
+    const queryFromParams = searchParams.get('search');
+    const pageFromParams = Number(searchParams.get('page')) || 1;
+
+    let initialQuery = '';
+    if (queryFromParams !== null) {
+      initialQuery = queryFromParams;
+    } else if (storageSearchValue !== null) {
+      initialQuery = storageSearchValue;
     }
-    search(lastSearch, 1);
+
+    if (searchInput.current) {
+      searchInput.current.value = initialQuery;
+    }
+
+    const initialPage = queryFromParams !== null ? pageFromParams : 1;
+    search(initialQuery, initialPage, handleSearchSuccess);
   }, []);
 
   return (
