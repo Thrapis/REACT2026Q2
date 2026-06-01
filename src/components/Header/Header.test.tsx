@@ -2,9 +2,9 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 import Header from './Header';
-import { useTheme } from '@/hooks/UseTheme';
+import { useTheme } from '@/hooks/theme/UseTheme';
 
-vi.mock('@/hooks/UseTheme', () => ({
+vi.mock('@/hooks/theme/UseTheme', () => ({
   useTheme: vi.fn(),
 }));
 

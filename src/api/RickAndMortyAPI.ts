@@ -3,49 +3,29 @@ import type {
   CharacterSearchResultEntry,
 } from '@/types/CharacterSearchResult';
 
+const BASE_URL = 'https://rickandmortyapi.com/api';
+
 async function searchCharacters(
   name: string,
   page: number = 1
 ): Promise<CharacterSearchResult> {
-  const url = `https://rickandmortyapi.com/api/character?name=${name}&page=${page}`;
-
+  const url = `${BASE_URL}/character?name=${name}&page=${page}`;
   const response = await fetch(url);
-
   const data = (await response.json()) as CharacterSearchResult;
-
   if (!response.ok) {
-    throw new Error(data.error);
+    throw new Error(data.error || 'Failed to search characters');
   }
-
   return data;
 }
 
-async function getCharacter(
-  id: number = 1
-): Promise<CharacterSearchResultEntry> {
-  const url = `https://rickandmortyapi.com/api/character/${id}`;
-
+async function getCharacter(id: number): Promise<CharacterSearchResultEntry> {
+  const url = `${BASE_URL}/character/${id}`;
   const response = await fetch(url);
-
   const data = (await response.json()) as CharacterSearchResultEntry;
-
   if (!response.ok) {
-    throw new Error('Could not load character data');
+    throw new Error('Failed to load character data');
   }
-
   return data;
 }
 
-async function getCharactersPage(url: string): Promise<CharacterSearchResult> {
-  const response = await fetch(url);
-
-  const data = (await response.json()) as CharacterSearchResult;
-
-  if (!response.ok) {
-    throw new Error(data.error);
-  }
-
-  return data;
-}
-
-export { searchCharacters, getCharacter, getCharactersPage };
+export { searchCharacters, getCharacter };

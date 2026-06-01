@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Outlet, useNavigate, useSearchParams } from 'react-router-dom';
-import useLocalStorage from '@/hooks/UseLocalStorage';
+import useLocalStorage from '@/hooks/local-storage/UseLocalStorage';
 import { useCharacterStore } from '@/stores/Character.store';
 
 import ChracterCard from '@/components/ChracterCard/ChracterCard';
