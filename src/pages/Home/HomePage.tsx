@@ -2,7 +2,6 @@ import { useEffect, useRef } from 'react';
 import { Outlet, useNavigate, useSearchParams } from 'react-router-dom';
 import useLocalStorage from '@/hooks/UseLocalStorage';
 import { useCharacterStore } from '@/stores/Character.store';
-import { useTheme } from '@/hooks/UseTheme';
 
 import ChracterCard from '@/components/ChracterCard/ChracterCard';
 import Pagination from '@/components/Pagination/Pagination';
@@ -15,8 +14,6 @@ import loadingSVG from '@/assets/loading.svg';
 const LAST_SEARCH_KEY = 'last_search';
 
 export default function HomePage() {
-  const { theme } = useTheme();
-
   const [storageSearchValue, setStorageSearchValue] =
     useLocalStorage(LAST_SEARCH_KEY);
 
@@ -84,12 +81,12 @@ export default function HomePage() {
 
   return (
     <>
-      <section className={`top-controls-section ${theme}`}>
+      <section className="top-controls-section">
         <input type="text" ref={searchInput} />
         <button onClick={handleSearch}>Search</button>
       </section>
 
-      <section className={`results-section ${theme}`}>
+      <section className="results-section">
         <div className="search-results">
           {error === undefined && <h3>Results:</h3>}
 
@@ -131,12 +128,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className={`app-control-section ${theme}`}>
+      <section className="app-control-section">
         <ErrorThrowButton />
       </section>
 
       {isLoading && (
-        <div className={`loading-space ${theme}`}>
+        <div className="loading-space">
           <img className="loading-indicator" src={loadingSVG} />
         </div>
       )}

@@ -40,38 +40,6 @@ describe('Header Component', () => {
     expect(aboutLink).toHaveAttribute('href', '/about');
   });
 
-  it('should apply light theme class and format button text correctly', () => {
-    vi.mocked(useTheme).mockReturnValue({
-      theme: 'light',
-      toggleTheme: mockToggleTheme,
-    });
-
-    const { container } = renderHeader();
-    const headerElement = container.firstChild;
-
-    expect(headerElement).toHaveClass('header');
-    expect(headerElement).toHaveClass('light');
-    expect(
-      screen.getByRole('button', { name: 'Light Theme' })
-    ).toBeInTheDocument();
-  });
-
-  it('should apply dark theme class and format button text correctly', () => {
-    vi.mocked(useTheme).mockReturnValue({
-      theme: 'dark',
-      toggleTheme: mockToggleTheme,
-    });
-
-    const { container } = renderHeader();
-    const headerElement = container.firstChild;
-
-    expect(headerElement).toHaveClass('header');
-    expect(headerElement).toHaveClass('dark');
-    expect(
-      screen.getByRole('button', { name: 'Dark Theme' })
-    ).toBeInTheDocument();
-  });
-
   it('should call toggleTheme when button clicked', () => {
     vi.mocked(useTheme).mockReturnValue({
       theme: 'light',

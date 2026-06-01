@@ -1,12 +1,9 @@
-import { useTheme } from '@/hooks/UseTheme';
 import { useSelectionStore } from '@/stores/Selection.store';
 import { convertToCSV, downloadFile } from '@/utils/FileHelper';
 
 import './SelectionFlyout.css';
 
 export default function SelectionFlyout() {
-  const { theme } = useTheme();
-
   const { characters, removeSelection, clearSelection } = useSelectionStore();
 
   const handleDownload = () => {
@@ -16,7 +13,7 @@ export default function SelectionFlyout() {
 
   return (
     <div
-      className={`selection-flyout-container ${theme} ${characters.length === 0 ? 'hidden' : ''}`}
+      className={`selection-flyout-container ${characters.length === 0 ? 'hidden' : ''}`}
     >
       <ul className="selection-flyout-list">
         {characters.map((selection) => (

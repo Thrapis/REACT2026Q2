@@ -2,14 +2,11 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import type { CharacterSearchResultEntry } from '@/types/CharacterSearchResult';
 import { getCharacter } from '@/api/RickAndMortyAPI';
-import { useTheme } from '@/hooks/UseTheme';
 
 import './DetailsPage.css';
 import loadingSVG from '@/assets/loading.svg';
 
 export default function DetailsPage() {
-  const { theme } = useTheme();
-
   const { id } = useParams<{ id: string }>();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -35,7 +32,7 @@ export default function DetailsPage() {
   }, [id]);
 
   return (
-    <section className={`details-section ${theme}`}>
+    <section className="details-section">
       <h3>Details:</h3>
       <nav className="details-navigation">
         <button
