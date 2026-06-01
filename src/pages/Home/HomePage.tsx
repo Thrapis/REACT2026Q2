@@ -1,7 +1,7 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { Outlet, useNavigate, useSearchParams } from 'react-router-dom';
 import useLocalStorage from '@/hooks/local-storage/UseLocalStorage';
-import { useCharacterStore } from '@/stores/Character.store';
+import { useCharacterSearch } from '@/hooks/query/UseCharacterSearch';
 
 import ChracterCard from '@/components/ChracterCard/ChracterCard';
 import Pagination from '@/components/Pagination/Pagination';
@@ -11,103 +11,86 @@ import ErrorThrowButton from '@/components/ErrorThrowButton/ErrorThrowButton';
 import './HomePage.css';
 import loadingSVG from '@/assets/loading.svg';
 
-const LAST_SEARCH_KEY = 'last_search';
+const LAST_SEARCH_KEY = 'last-search';
 
 export default function HomePage() {
   const [storageSearchValue, setStorageSearchValue] =
     useLocalStorage(LAST_SEARCH_KEY);
-
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const searchInput = useRef<HTMLInputElement>(null);
 
-  const {
-    lastSearch,
-    currentPage,
-    result,
-    isLoading,
-    error,
-    firstLoadCompleted,
-    search,
-  } = useCharacterStore();
+  const queryFromParams = searchParams.get('search');
+  const pageFromParams = Number(searchParams.get('page')) || 1;
 
-  const handleSearchSuccess = (query: string, page: number) => {
-    setStorageSearchValue(query);
-    setSearchParams({
-      search: query,
-      page: `${page}`,
-    });
-  };
+  const initialQuery =
+    queryFromParams !== null ? queryFromParams : storageSearchValue || '';
+  const initialPage = queryFromParams !== null ? pageFromParams : 1;
+
+  const { data, isFetching, isError, error } = useCharacterSearch(
+    initialQuery,
+    initialPage
+  );
 
   const handleSearch = () => {
-    if (searchInput?.current?.value !== undefined) {
-      const query = searchInput?.current?.value.trim();
+    if (searchInput?.current) {
+      const query = searchInput.current.value.trim();
       searchInput.current.value = query;
 
-      if (firstLoadCompleted && query === lastSearch && error === undefined) {
-        return;
-      }
-
-      search(query, 1, handleSearchSuccess);
+      setStorageSearchValue(query);
+      setSearchParams({
+        search: query,
+        page: '1',
+      });
     }
   };
 
   const handleSelectPage = (page: number) => {
-    search(lastSearch, page, handleSearchSuccess);
+    setSearchParams({
+      search: initialQuery,
+      page: `${page}`,
+    });
   };
 
   const handleSelectCharacter = (characterId: number) => {
     navigate(`/details/${characterId}?${searchParams.toString()}`);
   };
 
-  useEffect(() => {
-    const queryFromParams = searchParams.get('search');
-    const pageFromParams = Number(searchParams.get('page')) || 1;
-
-    let initialQuery = '';
-    if (queryFromParams !== null) {
-      initialQuery = queryFromParams;
-    } else if (storageSearchValue !== null) {
-      initialQuery = storageSearchValue;
-    }
-
-    if (searchInput.current) {
-      searchInput.current.value = initialQuery;
-    }
-
-    const initialPage = queryFromParams !== null ? pageFromParams : 1;
-    search(initialQuery, initialPage, handleSearchSuccess);
-  }, []);
-
   return (
     <>
       <section className="top-controls-section">
-        <input type="text" ref={searchInput} />
+        <input type="text" ref={searchInput} defaultValue={initialQuery} />
         <button onClick={handleSearch}>Search</button>
       </section>
 
       <section className="results-section">
         <div className="search-results">
-          {error === undefined && <h3>Results:</h3>}
+          {!isError && <h3>Results:</h3>}
 
-          {result === undefined && error === undefined && (
+          {data === undefined && !isError && !isFetching && (
             <span>*No results*</span>
           )}
 
-          {error !== undefined && (
-            <ErrorMessage message={error} onRetry={handleSearch} />
+          {isError && (
+            <ErrorMessage
+              message={
+                error instanceof Error ? error.message : 'Something went wrong'
+              }
+              onRetry={handleSearch}
+            />
           )}
 
-          {result?.info && (
+          {data?.info && (
             <Pagination
-              current={currentPage}
-              pages={result.info.pages}
+              current={initialPage}
+              pages={data.info.pages}
               onPageSelect={handleSelectPage}
             />
           )}
+
           <div className="results-container">
-            {result?.results !== undefined &&
-              result.results.map((item) => (
+            {data?.results !== undefined &&
+              data.results.map((item) => (
                 <ChracterCard
                   key={item.id}
                   character={item}
@@ -115,10 +98,11 @@ export default function HomePage() {
                 />
               ))}
           </div>
-          {result?.info && (
+
+          {data?.info && (
             <Pagination
-              current={currentPage}
-              pages={result.info.pages}
+              current={initialPage}
+              pages={data.info.pages}
               onPageSelect={handleSelectPage}
             />
           )}
@@ -132,7 +116,7 @@ export default function HomePage() {
         <ErrorThrowButton />
       </section>
 
-      {isLoading && (
+      {isFetching && (
         <div className="loading-space">
           <img className="loading-indicator" src={loadingSVG} />
         </div>

@@ -1,7 +1,5 @@
-import { useEffect, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import type { CharacterSearchResultEntry } from '@/types/CharacterSearchResult';
-import { getCharacter } from '@/api/RickAndMortyAPI';
+import { useCharacter } from '@/hooks/query/UseCharacter';
 
 import './DetailsPage.css';
 import loadingSVG from '@/assets/loading.svg';
@@ -11,25 +9,18 @@ export default function DetailsPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  const [lastId, setLastId] = useState<string>('');
-  const [character, setCharacter] = useState<
-    CharacterSearchResultEntry | undefined
-  >();
+  const characterId = id ? parseInt(id, 10) : undefined;
+
+  const {
+    data: character,
+    isFetching,
+    isError,
+    error,
+  } = useCharacter(characterId);
 
   const handleUnselectCharacter = () => {
     navigate(`/?${searchParams.toString()}`);
   };
-
-  useEffect(() => {
-    if (id) {
-      const characterId = parseInt(id, 10);
-
-      getCharacter(characterId).then((result: CharacterSearchResultEntry) => {
-        setCharacter(result);
-        setLastId(id);
-      });
-    }
-  }, [id]);
 
   return (
     <section className="details-section">
@@ -42,7 +33,14 @@ export default function DetailsPage() {
           X
         </button>
       </nav>
-      {lastId === id && character ? (
+
+      {isFetching && (
+        <img className="details-loading-indicator" src={loadingSVG} />
+      )}
+
+      {isError && <div className="error-message">{error.message}</div>}
+
+      {!isFetching && !isError && character && (
         <article className="character-details">
           <img
             className="character-details-image"
@@ -57,8 +55,6 @@ export default function DetailsPage() {
             </div>
           </div>
         </article>
-      ) : (
-        <img className="details-loading-indicator" src={loadingSVG} />
       )}
     </section>
   );
