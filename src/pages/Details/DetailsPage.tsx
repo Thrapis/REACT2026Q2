@@ -1,5 +1,8 @@
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useCharacter } from '@/hooks/query/UseCharacter';
+import { useQueryClient } from '@tanstack/react-query';
+import { CharacterKeys } from '@/hooks/query/types';
+import ErrorMessage from '@/components/ErrorMessage/ErrorMessage';
 
 import './DetailsPage.css';
 import loadingSVG from '@/assets/loading.svg';
@@ -8,6 +11,7 @@ export default function DetailsPage() {
   const { id } = useParams<{ id: string }>();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const characterId = id ? parseInt(id, 10) : undefined;
 
@@ -22,9 +26,20 @@ export default function DetailsPage() {
     navigate(`/?${searchParams.toString()}`);
   };
 
+  const handleRefresh = () => {
+    if (characterId) {
+      queryClient.invalidateQueries({
+        queryKey: CharacterKeys.detail(characterId),
+      });
+    }
+  };
+
   return (
     <section className="details-section">
-      <h3>Details:</h3>
+      <div className="details-title">
+        <button onClick={handleRefresh}>Refresh</button>
+        <h3>Details:</h3>
+      </div>
       <nav className="details-navigation">
         <button
           className="details-close-button"
@@ -38,7 +53,14 @@ export default function DetailsPage() {
         <img className="details-loading-indicator" src={loadingSVG} />
       )}
 
-      {isError && <div className="error-message">{error.message}</div>}
+      {isError && (
+        <ErrorMessage
+          message={
+            error instanceof Error ? error.message : 'Something went wrong'
+          }
+          onRetry={handleRefresh}
+        />
+      )}
 
       {!isFetching && !isError && character && (
         <article className="character-details">

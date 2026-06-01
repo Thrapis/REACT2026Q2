@@ -9,9 +9,10 @@
   align-items: center;
 
   border-radius: 16px;
+  border: solid 1px transparent;
 
   &:hover {
-    background-color: var(--background-surface);
+    border-color: var(--input-border);
   }
 }
 

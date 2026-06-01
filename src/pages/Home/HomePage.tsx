@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import { Outlet, useNavigate, useSearchParams } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import useLocalStorage from '@/hooks/local-storage/UseLocalStorage';
 import { useCharacterSearch } from '@/hooks/query/UseCharacterSearch';
 
@@ -7,6 +8,7 @@ import ChracterCard from '@/components/ChracterCard/ChracterCard';
 import Pagination from '@/components/Pagination/Pagination';
 import ErrorMessage from '@/components/ErrorMessage/ErrorMessage';
 import ErrorThrowButton from '@/components/ErrorThrowButton/ErrorThrowButton';
+import { CharacterKeys } from '@/hooks/query/types';
 
 import './HomePage.css';
 import loadingSVG from '@/assets/loading.svg';
@@ -19,6 +21,7 @@ export default function HomePage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const searchInput = useRef<HTMLInputElement>(null);
+  const queryClient = useQueryClient();
 
   const queryFromParams = searchParams.get('search');
   const pageFromParams = Number(searchParams.get('page')) || 1;
@@ -56,6 +59,12 @@ export default function HomePage() {
     navigate(`/details/${characterId}?${searchParams.toString()}`);
   };
 
+  const handleRefresh = () => {
+    queryClient.invalidateQueries({
+      queryKey: CharacterKeys.search(initialQuery, initialPage),
+    });
+  };
+
   return (
     <>
       <section className="top-controls-section">
@@ -63,9 +72,18 @@ export default function HomePage() {
         <button onClick={handleSearch}>Search</button>
       </section>
 
+      <section className="info-section">
+        To get API Error spam &apos;Refresh&apos; button
+      </section>
+
       <section className="results-section">
         <div className="search-results">
-          {!isError && <h3>Results:</h3>}
+          {!isError && (
+            <div className="results-title">
+              <button onClick={handleRefresh}>Refresh</button>
+              <h3>Results:</h3>
+            </div>
+          )}
 
           {data === undefined && !isError && !isFetching && (
             <span>*No results*</span>
@@ -76,11 +94,11 @@ export default function HomePage() {
               message={
                 error instanceof Error ? error.message : 'Something went wrong'
               }
-              onRetry={handleSearch}
+              onRetry={handleRefresh}
             />
           )}
 
-          {data?.info && (
+          {!isError && data?.info && (
             <Pagination
               current={initialPage}
               pages={data.info.pages}
@@ -89,7 +107,8 @@ export default function HomePage() {
           )}
 
           <div className="results-container">
-            {data?.results !== undefined &&
+            {!isError &&
+              data?.results !== undefined &&
               data.results.map((item) => (
                 <ChracterCard
                   key={item.id}
@@ -99,7 +118,7 @@ export default function HomePage() {
               ))}
           </div>
 
-          {data?.info && (
+          {!isError && data?.info && (
             <Pagination
               current={initialPage}
               pages={data.info.pages}
