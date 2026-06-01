@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { useTheme } from '../../hooks/UseTheme';
+import { useTheme } from '@/hooks/UseTheme';
 
 import './Header.css';
 

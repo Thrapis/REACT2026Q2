@@ -1,6 +1,6 @@
-import { useTheme } from '../../hooks/UseTheme';
-import { useSelectionStore } from '../../stores/Selection.store';
-import { convertToCSV, downloadFile } from '../../utils/FileHelper';
+import { useTheme } from '@/hooks/UseTheme';
+import { useSelectionStore } from '@/stores/Selection.store';
+import { convertToCSV, downloadFile } from '@/utils/FileHelper';
 
 import './SelectionFlyout.css';
 

@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import Layout from './Layout';
-import { useTheme } from '../../hooks/UseTheme';
+import { useTheme } from '@/hooks/UseTheme';
 
-vi.mock('../../hooks/UseTheme', () => ({
+vi.mock('@/hooks/UseTheme', () => ({
   useTheme: vi.fn(),
 }));
 

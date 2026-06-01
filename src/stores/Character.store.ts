@@ -1,6 +1,6 @@
 import { create } from 'zustand';
-import type { CharacterSearchResult } from '../types/CharacterSearchResult';
-import { searchCharacters } from '../api/RickAndMortyAPI';
+import { searchCharacters } from '@/api/RickAndMortyAPI';
+import type { CharacterSearchResult } from '@/types/CharacterSearchResult';
 
 interface CharacterState {
   lastSearch: string;

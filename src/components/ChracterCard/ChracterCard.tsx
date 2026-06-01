@@ -1,6 +1,6 @@
-import { useTheme } from '../../hooks/UseTheme';
-import { useSelectionStore } from '../../stores/Selection.store';
-import type { CharacterSearchResultEntry } from '../../types/CharacterSearchResult';
+import { useTheme } from '@/hooks/UseTheme';
+import { useSelectionStore } from '@/stores/Selection.store';
+import type { CharacterSearchResultEntry } from '@/types/CharacterSearchResult';
 
 import './ChracterCard.css';
 

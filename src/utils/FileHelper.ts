@@ -1,4 +1,4 @@
-import type { CharacterSearchResultEntry } from '../types/CharacterSearchResult';
+import type { CharacterSearchResultEntry } from '@/types/CharacterSearchResult';
 
 export const convertToCSV = (list: CharacterSearchResultEntry[]) => {
   const header = ['id', 'name', 'status', 'species', 'gender', 'image'];

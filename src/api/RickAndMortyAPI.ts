@@ -1,7 +1,7 @@
 import type {
   CharacterSearchResult,
   CharacterSearchResultEntry,
-} from '../types/CharacterSearchResult';
+} from '@/types/CharacterSearchResult';
 
 async function searchCharacters(
   name: string,

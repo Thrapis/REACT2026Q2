@@ -1,10 +1,10 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import SelectionFlyout from './SelectionFlyout';
-import { useSelectionStore } from '../../stores/Selection.store';
-import { ThemeProvider } from '../../context/Theme/ThemeProvider';
+import { useSelectionStore } from '@/stores/Selection.store';
+import { ThemeProvider } from '@/context/Theme/ThemeProvider';
 
-vi.mock('../../stores/Selection.store', () => ({
+vi.mock('@/stores/Selection.store', () => ({
   useSelectionStore: vi.fn(),
 }));
 

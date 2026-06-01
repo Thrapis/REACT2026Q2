@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import ChracterCard from './ChracterCard';
-import type { CharacterSearchResultEntry } from '../../types/CharacterSearchResult';
-import { ThemeProvider } from '../../context/Theme/ThemeProvider';
+import type { CharacterSearchResultEntry } from '@/types/CharacterSearchResult';
+import { ThemeProvider } from '@/context/Theme/ThemeProvider';
 
 describe('ChracterCard', () => {
   const mockCharacter: CharacterSearchResultEntry = {

@@ -1,13 +1,13 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
-import AppPage from './AppPage';
-import * as api from '../../api/RickAndMortyAPI';
-import type { CharacterSearchResult } from '../../types/CharacterSearchResult';
-import { useCharacterStore } from '../../stores/Character.store';
-import { ThemeProvider } from '../../context/Theme/ThemeProvider';
+import HomePage from './HomePage';
+import * as api from '@/api/RickAndMortyAPI';
+import type { CharacterSearchResult } from '@/types/CharacterSearchResult';
+import { useCharacterStore } from '@/stores/Character.store';
+import { ThemeProvider } from '@/context/Theme/ThemeProvider';
 
-vi.mock('../../api/RickAndMortyAPI', () => ({
+vi.mock('@/api/RickAndMortyAPI', () => ({
   searchCharacters: vi.fn(),
 }));
 
@@ -46,7 +46,7 @@ describe('App Component', () => {
     return render(
       <ThemeProvider>
         <MemoryRouter>
-          <AppPage />
+          <HomePage />
         </MemoryRouter>
       </ThemeProvider>
     );

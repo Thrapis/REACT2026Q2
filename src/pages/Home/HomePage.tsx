@@ -1,20 +1,20 @@
 import { useEffect, useRef } from 'react';
 import { Outlet, useNavigate, useSearchParams } from 'react-router-dom';
-import useLocalStorage from '../../hooks/UseLocalStorage';
-import { useCharacterStore } from '../../stores/Character.store';
+import useLocalStorage from '@/hooks/UseLocalStorage';
+import { useCharacterStore } from '@/stores/Character.store';
+import { useTheme } from '@/hooks/UseTheme';
 
-import ChracterCard from '../../components/ChracterCard/ChracterCard';
-import Pagination from '../../components/Pagination/Pagination';
-import ErrorMessage from '../../components/ErrorMessage/ErrorMessage';
-import ErrorThrowButton from '../../components/ErrorThrowButton/ErrorThrowButton';
+import ChracterCard from '@/components/ChracterCard/ChracterCard';
+import Pagination from '@/components/Pagination/Pagination';
+import ErrorMessage from '@/components/ErrorMessage/ErrorMessage';
+import ErrorThrowButton from '@/components/ErrorThrowButton/ErrorThrowButton';
 
-import './AppPage.css';
+import './HomePage.css';
 import loadingSVG from '@/assets/loading.svg';
-import { useTheme } from '../../hooks/UseTheme';
 
 const LAST_SEARCH_KEY = 'last_search';
 
-export default function AppPage() {
+export default function HomePage() {
   const { theme } = useTheme();
 
   const [storageSearchValue, setStorageSearchValue] =

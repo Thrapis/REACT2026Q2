@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { useTheme } from '../../hooks/UseTheme';
+import { useTheme } from '@/hooks/UseTheme';
 
 import './Layout.css';
 

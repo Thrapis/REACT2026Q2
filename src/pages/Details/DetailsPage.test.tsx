@@ -2,11 +2,11 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import DetailsPage from './DetailsPage';
-import type { CharacterSearchResultEntry } from '../../types/CharacterSearchResult';
-import * as api from '../../api/RickAndMortyAPI';
-import { ThemeProvider } from '../../context/Theme/ThemeProvider';
+import type { CharacterSearchResultEntry } from '@/types/CharacterSearchResult';
+import * as api from '@/api/RickAndMortyAPI';
+import { ThemeProvider } from '@/context/Theme/ThemeProvider';
 
-vi.mock('../../api/RickAndMortyAPI', () => ({
+vi.mock('@/api/RickAndMortyAPI', () => ({
   getCharacter: vi.fn(),
 }));
 

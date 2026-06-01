@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { CharacterSearchResultEntry } from '../types/CharacterSearchResult';
+import type { CharacterSearchResultEntry } from '@/types/CharacterSearchResult';
 
 interface SelectionState {
   characters: CharacterSearchResultEntry[];

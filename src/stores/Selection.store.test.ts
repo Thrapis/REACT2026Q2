@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { useSelectionStore } from './Selection.store';
-import type { CharacterSearchResultEntry } from '../types/CharacterSearchResult';
+import type { CharacterSearchResultEntry } from '@/types/CharacterSearchResult';
 
 describe('Selection Store', () => {
   const mockCharacter1: CharacterSearchResultEntry = {
