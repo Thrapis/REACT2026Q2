@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { convertToCSV, downloadFile } from './FileHelper';
-import type { CharacterSearchResultEntry } from '../types/CharacterSearchResult';
+import type { CharacterSearchResultEntry } from '@/types/CharacterSearchResult';
 
 describe('FileHelper', () => {
   describe('convertToCSV', () => {

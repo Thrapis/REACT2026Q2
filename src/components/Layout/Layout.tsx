@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react';
-import { useTheme } from '../../hooks/UseTheme';
 
 import './Layout.css';
 
@@ -8,7 +7,5 @@ interface LayoutProps {
 }
 
 export default function Layout({ children }: LayoutProps) {
-  const { theme } = useTheme();
-
-  return <div className={`layout ${theme}`}>{children}</div>;
+  return <div className="layout">{children}</div>;
 }

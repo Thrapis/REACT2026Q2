@@ -1,13 +1,12 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
-import AppPage from './AppPage';
-import * as api from '../../api/RickAndMortyAPI';
-import type { CharacterSearchResult } from '../../types/CharacterSearchResult';
-import { useCharacterStore } from '../../stores/Character.store';
-import { ThemeProvider } from '../../context/Theme/ThemeProvider';
+import HomePage from './HomePage';
+import * as api from '@/api/RickAndMortyAPI';
+import type { CharacterSearchResult } from '@/types/CharacterSearchResult';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-vi.mock('../../api/RickAndMortyAPI', () => ({
+vi.mock('@/api/RickAndMortyAPI', () => ({
   searchCharacters: vi.fn(),
 }));
 
@@ -26,34 +25,31 @@ describe('App Component', () => {
     ],
   };
 
+  const STORAGE_KEY = 'last-search';
+
   beforeEach(() => {
     vi.clearAllMocks();
     localStorage.clear();
-
-    useCharacterStore.setState({
-      lastSearch: '',
-      currentPage: 1,
-      result: undefined,
-      isLoading: true,
-      error: undefined,
-      firstLoadCompleted: false,
-    });
 
     vi.mocked(api.searchCharacters).mockResolvedValue(mockData);
   });
 
   const renderApp = () => {
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+
     return render(
-      <ThemeProvider>
+      <QueryClientProvider client={queryClient}>
         <MemoryRouter>
-          <AppPage />
+          <HomePage />
         </MemoryRouter>
-      </ThemeProvider>
+      </QueryClientProvider>
     );
   };
 
   it('should load data from localStorage on start', async () => {
-    localStorage.setItem('last_search', 'Morty');
+    localStorage.setItem(STORAGE_KEY, 'Morty');
 
     renderApp();
 
@@ -78,7 +74,7 @@ describe('App Component', () => {
       expect(api.searchCharacters).toHaveBeenCalled();
     });
 
-    const storedValue = localStorage.getItem('last_search');
+    const storedValue = localStorage.getItem(STORAGE_KEY);
     expect(storedValue === 'Morty').toBe(true);
   });
 

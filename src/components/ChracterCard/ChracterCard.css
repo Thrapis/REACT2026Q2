@@ -9,13 +9,10 @@
   align-items: center;
 
   border-radius: 16px;
+  border: solid 1px transparent;
 
   &:hover {
-    background-color: aliceblue;
-
-    &.dark {
-      background-color: #2c3f4e;
-    }
+    border-color: var(--input-border);
   }
 }
 

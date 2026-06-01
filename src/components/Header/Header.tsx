@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { useTheme } from '../../hooks/UseTheme';
+import { useTheme } from '@/hooks/theme/UseTheme';
 
 import './Header.css';
 
@@ -11,7 +11,7 @@ export default function Header() {
   };
 
   return (
-    <header className={`header ${theme}`}>
+    <header className={`header`}>
       <nav className="header-navigation">
         <Link className="header-link" to={'/'}>
           Home

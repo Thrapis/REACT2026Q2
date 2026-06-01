@@ -1,6 +1,5 @@
-import { useTheme } from '../../hooks/UseTheme';
-import { useSelectionStore } from '../../stores/Selection.store';
-import type { CharacterSearchResultEntry } from '../../types/CharacterSearchResult';
+import { useSelectionStore } from '@/stores/Selection.store';
+import type { CharacterSearchResultEntry } from '@/types/CharacterSearchResult';
 
 import './ChracterCard.css';
 
@@ -13,8 +12,6 @@ export default function ChracterCard({
   character,
   onCharacterSelect,
 }: ChracterCardProps) {
-  const { theme } = useTheme();
-
   const { isSelected, toggleSelection } = useSelectionStore();
 
   const handleCheckClick = (event: React.MouseEvent<HTMLInputElement>) => {
@@ -27,7 +24,7 @@ export default function ChracterCard({
 
   return (
     <article
-      className={`character-card ${theme}`}
+      className={`character-card`}
       onClick={() => onCharacterSelect?.(character.id)}
     >
       <input

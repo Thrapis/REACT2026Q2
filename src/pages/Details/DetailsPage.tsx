@@ -1,42 +1,45 @@
-import { useEffect, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import type { CharacterSearchResultEntry } from '../../types/CharacterSearchResult';
-import { getCharacter } from '../../api/RickAndMortyAPI';
+import { useCharacter } from '@/hooks/query/UseCharacter';
+import { useQueryClient } from '@tanstack/react-query';
+import { CharacterKeys } from '@/hooks/query/types';
+import ErrorMessage from '@/components/ErrorMessage/ErrorMessage';
 
 import './DetailsPage.css';
 import loadingSVG from '@/assets/loading.svg';
-import { useTheme } from '../../hooks/UseTheme';
 
 export default function DetailsPage() {
-  const { theme } = useTheme();
-
   const { id } = useParams<{ id: string }>();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
-  const [lastId, setLastId] = useState<string>('');
-  const [character, setCharacter] = useState<
-    CharacterSearchResultEntry | undefined
-  >();
+  const characterId = id ? parseInt(id, 10) : undefined;
+
+  const {
+    data: character,
+    isFetching,
+    isError,
+    error,
+  } = useCharacter(characterId);
 
   const handleUnselectCharacter = () => {
     navigate(`/?${searchParams.toString()}`);
   };
 
-  useEffect(() => {
-    if (id) {
-      const characterId = parseInt(id, 10);
-
-      getCharacter(characterId).then((result: CharacterSearchResultEntry) => {
-        setCharacter(result);
-        setLastId(id);
+  const handleRefresh = () => {
+    if (characterId) {
+      queryClient.invalidateQueries({
+        queryKey: CharacterKeys.detail(characterId),
       });
     }
-  }, [id]);
+  };
 
   return (
-    <section className={`details-section ${theme}`}>
-      <h3>Details:</h3>
+    <section className="details-section">
+      <div className="details-title">
+        <button onClick={handleRefresh}>Refresh</button>
+        <h3>Details:</h3>
+      </div>
       <nav className="details-navigation">
         <button
           className="details-close-button"
@@ -45,7 +48,21 @@ export default function DetailsPage() {
           X
         </button>
       </nav>
-      {lastId === id && character ? (
+
+      {isFetching && (
+        <img className="details-loading-indicator" src={loadingSVG} />
+      )}
+
+      {isError && (
+        <ErrorMessage
+          message={
+            error instanceof Error ? error.message : 'Something went wrong'
+          }
+          onRetry={handleRefresh}
+        />
+      )}
+
+      {!isFetching && !isError && character && (
         <article className="character-details">
           <img
             className="character-details-image"
@@ -60,8 +77,6 @@ export default function DetailsPage() {
             </div>
           </div>
         </article>
-      ) : (
-        <img className="details-loading-indicator" src={loadingSVG} />
       )}
     </section>
   );

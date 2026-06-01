@@ -2,9 +2,9 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 import Header from './Header';
-import { useTheme } from '../../hooks/UseTheme';
+import { useTheme } from '@/hooks/theme/UseTheme';
 
-vi.mock('../../hooks/UseTheme', () => ({
+vi.mock('@/hooks/theme/UseTheme', () => ({
   useTheme: vi.fn(),
 }));
 
@@ -38,38 +38,6 @@ describe('Header Component', () => {
     expect(homeLink).toHaveAttribute('href', '/');
     expect(aboutLink).toBeInTheDocument();
     expect(aboutLink).toHaveAttribute('href', '/about');
-  });
-
-  it('should apply light theme class and format button text correctly', () => {
-    vi.mocked(useTheme).mockReturnValue({
-      theme: 'light',
-      toggleTheme: mockToggleTheme,
-    });
-
-    const { container } = renderHeader();
-    const headerElement = container.firstChild;
-
-    expect(headerElement).toHaveClass('header');
-    expect(headerElement).toHaveClass('light');
-    expect(
-      screen.getByRole('button', { name: 'Light Theme' })
-    ).toBeInTheDocument();
-  });
-
-  it('should apply dark theme class and format button text correctly', () => {
-    vi.mocked(useTheme).mockReturnValue({
-      theme: 'dark',
-      toggleTheme: mockToggleTheme,
-    });
-
-    const { container } = renderHeader();
-    const headerElement = container.firstChild;
-
-    expect(headerElement).toHaveClass('header');
-    expect(headerElement).toHaveClass('dark');
-    expect(
-      screen.getByRole('button', { name: 'Dark Theme' })
-    ).toBeInTheDocument();
   });
 
   it('should call toggleTheme when button clicked', () => {

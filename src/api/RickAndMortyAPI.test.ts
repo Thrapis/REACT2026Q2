@@ -1,5 +1,5 @@
 import { it, expect, vi, describe, beforeEach } from 'vitest';
-import { searchCharacters, getCharactersPage } from './RickAndMortyAPI';
+import { searchCharacters } from './RickAndMortyAPI';
 
 describe('API functions', () => {
   beforeEach(() => {
@@ -34,21 +34,5 @@ describe('API functions', () => {
     await expect(searchCharacters('SomeUnrealShite')).rejects.toThrow(
       errorText
     );
-  });
-
-  it('getCharactersPage should make request using URL', async () => {
-    const mockData = { info: {}, results: [] };
-    const testUrl =
-      'https://rickandmortyapi.com/api/character?page=2&name=rick';
-
-    vi.mocked(fetch).mockResolvedValue({
-      ok: true,
-      json: async () => mockData,
-    } as Response);
-
-    const result = await getCharactersPage(testUrl);
-
-    expect(fetch).toHaveBeenCalledWith(testUrl);
-    expect(result).toEqual(mockData);
   });
 });

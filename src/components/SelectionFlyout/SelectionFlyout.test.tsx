@@ -1,10 +1,9 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import SelectionFlyout from './SelectionFlyout';
-import { useSelectionStore } from '../../stores/Selection.store';
-import { ThemeProvider } from '../../context/Theme/ThemeProvider';
+import { useSelectionStore } from '@/stores/Selection.store';
 
-vi.mock('../../stores/Selection.store', () => ({
+vi.mock('@/stores/Selection.store', () => ({
   useSelectionStore: vi.fn(),
 }));
 
@@ -28,11 +27,7 @@ describe('SelectionFlyout', () => {
       clearSelection: mockClearSelection,
     });
 
-    const { container } = render(
-      <ThemeProvider>
-        <SelectionFlyout />
-      </ThemeProvider>
-    );
+    const { container } = render(<SelectionFlyout />);
     const component = container.firstChild as HTMLElement;
 
     expect(component).toHaveClass('selection-flyout-container');
@@ -46,11 +41,7 @@ describe('SelectionFlyout', () => {
       clearSelection: mockClearSelection,
     });
 
-    const { container } = render(
-      <ThemeProvider>
-        <SelectionFlyout />
-      </ThemeProvider>
-    );
+    const { container } = render(<SelectionFlyout />);
     const component = container.firstChild as HTMLElement;
 
     expect(component).not.toHaveClass('hidden');
@@ -66,11 +57,7 @@ describe('SelectionFlyout', () => {
       clearSelection: mockClearSelection,
     });
 
-    render(
-      <ThemeProvider>
-        <SelectionFlyout />
-      </ThemeProvider>
-    );
+    render(<SelectionFlyout />);
 
     const deleteButtons = screen.getAllByRole('button', { name: 'X' });
     fireEvent.click(deleteButtons[0]);
@@ -86,11 +73,7 @@ describe('SelectionFlyout', () => {
       clearSelection: mockClearSelection,
     });
 
-    render(
-      <ThemeProvider>
-        <SelectionFlyout />
-      </ThemeProvider>
-    );
+    render(<SelectionFlyout />);
 
     const clearButton = screen.getByRole('button', { name: 'Unselect All' });
     fireEvent.click(clearButton);
