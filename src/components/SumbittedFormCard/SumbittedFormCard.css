@@ -1,5 +1,6 @@
 .submitted-form-card {
-  min-width: 240px;
+  box-sizing: border-box;
+  min-width: 200px;
   padding: 8px;
 
   display: flex;
@@ -8,6 +9,12 @@
 
   border: solid 1px black;
   border-radius: 8px;
+}
+
+.submitted-form-card-image {
+  width: 100%;
+  height: 120px;
+  object-fit: contain;
 }
 
 .submitted-form-card-entry {

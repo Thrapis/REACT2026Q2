@@ -9,6 +9,7 @@ interface SumbittedFormCardProps {
 const SumbittedFormCard = ({ data }: SumbittedFormCardProps) => {
   return (
     <aside className="submitted-form-card">
+      <img className="submitted-form-card-image" src={data.image} />
       <div className="submitted-form-card-entry">
         <b>Name:</b> {data.name}
       </div>
@@ -20,6 +21,9 @@ const SumbittedFormCard = ({ data }: SumbittedFormCardProps) => {
       </div>
       <div className="submitted-form-card-entry">
         <b>Gender:</b> {data.gender}
+      </div>
+      <div className="submitted-form-card-entry">
+        <b>Country:</b> {data.country}
       </div>
       <div className="submitted-form-card-entry">
         <b>T&C:</b> {data.termsAndConditions ? 'Accepted' : 'Declined'}
