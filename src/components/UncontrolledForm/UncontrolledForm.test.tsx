@@ -7,6 +7,7 @@ const mockAddForm = vi.fn();
 vi.mock('@/stores/FormStore', () => ({
   useFormStore: () => ({
     addForm: mockAddForm,
+    countries: ['USA', 'Canada', 'UK'],
   }),
 }));
 
@@ -14,10 +15,6 @@ vi.mock('@/utils/ImageProcessing', () => ({
   convertToBase64: vi
     .fn()
     .mockResolvedValue('data:image/png;base64,mockBase64String'),
-}));
-
-vi.mock('@/constants/Countries', () => ({
-  COUNTRIES: ['USA', 'Canada', 'UK'],
 }));
 
 describe('UncontrolledForm Component', () => {
@@ -32,10 +29,10 @@ describe('UncontrolledForm Component', () => {
 
     expect(screen.getByLabelText(/Name:/i)).toHaveValue('');
     expect(screen.getByLabelText(/Email:/i)).toHaveValue('');
-    expect(screen.getByLabelText(/^Age:$/)).toHaveValue(null);
+    expect(screen.getByLabelText('Age:')).toHaveValue(null);
     expect(screen.getByLabelText(/Gender:/i)).toHaveValue('Unknown');
-    expect(screen.getByLabelText(/^Password:$/)).toHaveValue('');
-    expect(screen.getByLabelText(/Confirm Password:/i)).toHaveValue('');
+    expect(screen.getByLabelText('Password:')).toHaveValue('');
+    expect(screen.getByLabelText('Confirm Password:')).toHaveValue('');
     expect(screen.getByLabelText(/Image:/i)).toHaveValue('');
     expect(screen.getByLabelText(/Country:/i)).toHaveValue('');
     expect(screen.getByLabelText(/Terms and Conditions/i)).not.toBeChecked();
@@ -47,10 +44,10 @@ describe('UncontrolledForm Component', () => {
 
     await user.type(screen.getByLabelText(/Name:/i), 'Mr. Bombastick');
     await user.type(screen.getByLabelText(/Email:/i), 'mr.bombastick@barn.com');
-    await user.type(screen.getByLabelText(/^Age:$/), '28');
+    await user.type(screen.getByLabelText('Age:'), '28');
     await user.selectOptions(screen.getByLabelText(/Gender:/i), 'Male');
-    await user.type(screen.getByLabelText(/^Password:$/), 'Qq1!');
-    await user.type(screen.getByLabelText(/Confirm Password:/i), 'Qq1!');
+    await user.type(screen.getByLabelText('Password:'), 'Qq1!');
+    await user.type(screen.getByLabelText('Confirm Password:'), 'Qq1!');
     await user.type(screen.getByLabelText(/Country:/i), 'USA');
     await user.click(screen.getByLabelText(/Terms and Conditions/i));
 

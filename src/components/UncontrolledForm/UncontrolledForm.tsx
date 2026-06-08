@@ -1,7 +1,6 @@
 import { useRef, useState } from 'react';
 
 import { useFormStore } from '@/stores/FormStore';
-import { COUNTRIES } from '@/constants/Countries';
 import { convertToBase64 } from '@/utils/ImageProcessing';
 import { SumbittedFormSchema } from '@/schemas/SumbittedForm.schema';
 
@@ -12,7 +11,7 @@ interface UncontrolledFormProps {
 }
 
 const UncontrolledForm = ({ onClose }: UncontrolledFormProps) => {
-  const { addForm } = useFormStore();
+  const { countries, addForm } = useFormStore();
   const imageInputRef = useRef<HTMLInputElement | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
@@ -135,7 +134,7 @@ const UncontrolledForm = ({ onClose }: UncontrolledFormProps) => {
       </div>
 
       <datalist id="country-list">
-        {COUNTRIES.map((country) => (
+        {countries.map((country) => (
           <option key={country} value={country} />
         ))}
       </datalist>

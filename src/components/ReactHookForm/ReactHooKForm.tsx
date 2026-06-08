@@ -5,7 +5,6 @@ import { SumbittedFormSchema } from '@/schemas/SumbittedForm.schema';
 import { type SumbittedForm } from '@/types/SumbittedForm';
 import { useFormStore } from '@/stores/FormStore';
 import { convertToBase64 } from '@/utils/ImageProcessing';
-import { COUNTRIES } from '@/constants/Countries';
 
 import './ReactHookForm.css';
 
@@ -28,7 +27,7 @@ const ReactHookForm = ({ onClose }: ReactHookFormProps) => {
     resolver: zodResolver(SumbittedFormSchema),
     mode: 'onChange',
   });
-  const { addForm } = useFormStore();
+  const { countries, addForm } = useFormStore();
 
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -121,7 +120,7 @@ const ReactHookForm = ({ onClose }: ReactHookFormProps) => {
       </div>
 
       <datalist id="country-list">
-        {COUNTRIES.map((country) => (
+        {countries.map((country) => (
           <option key={country} value={country} />
         ))}
       </datalist>

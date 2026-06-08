@@ -1,4 +1,3 @@
-import { COUNTRIES } from '@/constants/Countries';
 import { z } from 'zod';
 
 const MAX_IMAGE_BYTE_SIZE = 2_097_152;
@@ -45,7 +44,7 @@ export const SumbittedFormSchema = z
         'Password must contain at least one special character'
       ),
     confirmPassword: z.string().min(1, 'Confirm Password is required'),
-    country: z.enum(COUNTRIES, 'Enter correct country name'),
+    country: z.string().min(1, 'Country is required'),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: 'Password is not the same as Confirm Password',

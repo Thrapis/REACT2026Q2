@@ -7,6 +7,7 @@ const mockAddForm = vi.fn();
 vi.mock('@/stores/FormStore', () => ({
   useFormStore: () => ({
     addForm: mockAddForm,
+    countries: ['USA', 'Canada', 'UK'],
   }),
 }));
 
@@ -14,10 +15,6 @@ vi.mock('@/utils/ImageProcessing', () => ({
   convertToBase64: vi
     .fn()
     .mockResolvedValue('data:image/png;base64,mockBase64String'),
-}));
-
-vi.mock('@/constants/Countries', () => ({
-  COUNTRIES: ['USA', 'Canada', 'UK'],
 }));
 
 describe('ReactHookForm Component', () => {
