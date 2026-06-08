@@ -1,30 +1,45 @@
 import { useState } from 'react';
+
 import Modal from '@/components/Modal/Modal';
+import UncontrolledForm from '@/components/UncontrolledForm/UncontrolledForm';
 
 import './App.css';
+import { useFormStore } from './stores/FormStore';
+import SumbittedFormCard from './components/SumbittedFormCard/SumbittedFormCard';
+import ReactHookForm from './components/ReactHookForm/ReactHooKForm';
 
 const App = () => {
-  const [openModal, setOpenModal] = useState<boolean>(false);
+  const { forms } = useFormStore();
+  const [openUModal, setOpenUModal] = useState<boolean>(false);
+  const [openRHModal, setOpenRHModal] = useState<boolean>(false);
 
   return (
     <>
-      <header>
-        <button onClick={() => setOpenModal(true)}>Open Modal</button>
+      <header className="header">
+        <button onClick={() => setOpenUModal(true)}>
+          Open Uncontrolled Modal
+        </button>
+        <button onClick={() => setOpenRHModal(true)}>
+          Open React Hook Form Modal
+        </button>
       </header>
-      <main>
-        {openModal && (
-          <Modal onClose={() => setOpenModal(false)}>
-            <form>
-              <input
-                type="text"
-                placeholder="Enter Text..."
-                name="some-field"
-              />
-              <button type="submit">Submit</button>
-            </form>
-          </Modal>
-        )}
+      <main className="main">
+        <div className="forms-container">
+          {forms.map((f, i) => (
+            <SumbittedFormCard key={i} data={f} />
+          ))}
+        </div>
       </main>
+      {openUModal && (
+        <Modal onClose={() => setOpenUModal(false)}>
+          <UncontrolledForm onClose={() => setOpenUModal(false)} />
+        </Modal>
+      )}
+      {openRHModal && (
+        <Modal onClose={() => setOpenRHModal(false)}>
+          <ReactHookForm onClose={() => setOpenRHModal(false)} />
+        </Modal>
+      )}
     </>
   );
 };

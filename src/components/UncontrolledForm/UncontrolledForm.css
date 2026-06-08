@@ -1,0 +1,18 @@
+.u-form {
+  min-width: 320px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.u-form-entry {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 8px;
+
+  &.terms {
+    justify-content: flex-start;
+  }
+}

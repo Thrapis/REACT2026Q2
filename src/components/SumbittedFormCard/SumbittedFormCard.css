@@ -1,0 +1,18 @@
+.submitted-form-card {
+  min-width: 240px;
+  padding: 8px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  border: solid 1px black;
+  border-radius: 8px;
+}
+
+.submitted-form-card-entry {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 16px;
+}

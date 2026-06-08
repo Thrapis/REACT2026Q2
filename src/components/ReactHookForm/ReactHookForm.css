@@ -1,0 +1,22 @@
+.rh-form {
+  min-width: 320px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.rh-form-entry {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 8px;
+
+  &.terms {
+    justify-content: flex-start;
+  }
+}
+
+.rh-form-errors {
+  color: crimson;
+}
