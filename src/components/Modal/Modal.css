@@ -1,0 +1,41 @@
+.modal-drop {
+  position: absolute;
+  left: 0;
+  top: 0;
+
+  height: 100%;
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: #80808080;
+  backdrop-filter: blur(1px);
+}
+
+.modal {
+  padding: 16px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+
+  background-color: white;
+  border-radius: 16px;
+}
+
+.modal-close-button {
+  height: 32px;
+  width: 32px;
+  padding: 4px;
+
+  align-self: flex-end;
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
