@@ -9,28 +9,27 @@ interface ModalProps {
 }
 
 const Modal = ({ children, onClose }: ModalProps) => {
-  const handleClose = () => {
-    document.removeEventListener('keydown', handleKeyDown);
-    onClose();
-  };
-
   const handleDropClick = (event: React.MouseEvent<HTMLDivElement>) => {
     if (event.target === event.currentTarget) {
-      handleClose();
+      onClose();
     }
   };
 
   const handleKeyDown = (event: KeyboardEvent) => {
     switch (event.key) {
       case 'Escape':
-        handleClose();
+        onClose();
         break;
     }
   };
 
   useEffect(() => {
     document.addEventListener('keydown', handleKeyDown);
-  }, []);
+
+    return () => {
+      document.addEventListener('keydown', handleKeyDown);
+    };
+  }, [handleKeyDown]);
 
   return createPortal(
     <div className="modal-drop" onClick={handleDropClick}>
