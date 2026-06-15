@@ -1,7 +1,12 @@
+import { memo, useMemo } from 'react';
 import type { YearData } from '../../types';
 import { formatNumber } from '../../utils/format-utils';
 
 import styles from './data-table.module.css';
+
+const FORMAT_SETTINGS = {
+  maximumFractionDigits: 2,
+} as const;
 
 type DataTableProps = {
   data: YearData[];
@@ -9,29 +14,28 @@ type DataTableProps = {
   columns: string[];
 };
 
-export const DataTable = ({ data, year, columns }: DataTableProps) => {
-  const yearData = data.filter((d) => d.year === year);
+export const DataTable = memo(function DataTable({ data, year, columns }: DataTableProps) {
+  const yearDataRecord = useMemo(() => data.find((d) => d.year === year), [data, year]);
 
-  if (yearData.length === 0) {
+  if (!yearDataRecord) {
     return <div className={styles.noData}>No data available for year {year}</div>;
   }
-
-  const record = yearData[0];
 
   return (
     <table className={styles.table}>
       <tbody>
-        {columns.map((column, index) => (
-          <tr key={index} className={styles.row}>
+        {columns.map((column) => (
+          <tr key={column} className={styles.row}>
             <td className={styles.labelCell}>{column.replace(/_/g, ' ').toUpperCase()}</td>
             <td className={styles.valueCell}>
-              {formatNumber(record[column as keyof YearData] as number | undefined, {
-                maximumFractionDigits: 2,
-              })}
+              {formatNumber(
+                yearDataRecord[column as keyof YearData] as number | undefined,
+                FORMAT_SETTINGS
+              )}
             </td>
           </tr>
         ))}
       </tbody>
     </table>
   );
-};
+});
