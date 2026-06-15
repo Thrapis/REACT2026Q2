@@ -20,7 +20,7 @@ export const ColumnModal = ({
     return null;
   }
 
-  const selectedColumnsSet = useMemo(() => new Set(selectedColumns), selectedColumns);
+  const selectedColumnsSet = useMemo(() => new Set(selectedColumns), [selectedColumns]);
 
   return (
     <div className={styles.overlay}>
