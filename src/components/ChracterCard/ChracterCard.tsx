@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { useSelectionStore } from '@/stores/Selection.store';
 import type { CharacterSearchResultEntry } from '@/types/CharacterSearchResult';
 
@@ -34,7 +35,11 @@ export default function ChracterCard({
         onClick={handleCheckClick}
         onChange={handleCheckChange}
       />
-      <img className="character-card-image" src={`${character.image}?0`} />
+      <Image
+        className="character-card-image"
+        src={`${character.image}?0`}
+        alt={`Image of ${character.name}`}
+      />
       <div className="character-card-info">
         <h4 className="character-card-name">{character.name}</h4>
       </div>

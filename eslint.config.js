@@ -7,9 +7,19 @@ import eslintConfigPrettier from 'eslint-config-prettier/flat';
 import eslintPluginQuery from '@tanstack/eslint-plugin-query';
 import tseslint from 'typescript-eslint';
 import { defineConfig, globalIgnores } from 'eslint/config';
+import nextVitals from 'eslint-config-next/core-web-vitals';
+import nextPlugin from '@next/eslint-plugin-next';
 
 export default defineConfig([
-  globalIgnores(['dist', 'coverage']),
+  ...nextVitals,
+  globalIgnores([
+    'dist',
+    'coverage',
+    '.next/**',
+    'out/**',
+    'build/**',
+    'next-env.d.ts',
+  ]),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [
@@ -24,6 +34,11 @@ export default defineConfig([
     ],
     languageOptions: {
       globals: globals.browser,
+    },
+    rules: {
+      ...nextPlugin.configs.recommended.rules,
+      ...nextPlugin.configs['core-web-vitals'].rules,
+      'react-refresh/only-export-components': 'off',
     },
   },
 ]);

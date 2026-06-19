@@ -12,6 +12,7 @@ import { CharacterKeys } from '@/hooks/query/types';
 
 import './HomePage.css';
 import loadingSVG from '@/assets/loading.svg';
+import Image from 'next/image';
 
 const LAST_SEARCH_KEY = 'last-search';
 
@@ -137,7 +138,11 @@ export default function HomePage() {
 
       {isFetching && (
         <div className="loading-space">
-          <img className="loading-indicator" src={loadingSVG} />
+          <Image
+            className="loading-indicator"
+            src={loadingSVG}
+            alt="Loading..."
+          />
         </div>
       )}
     </>

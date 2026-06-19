@@ -1,4 +1,5 @@
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import Image from 'next/image';
 import { useCharacter } from '@/hooks/query/UseCharacter';
 import { useQueryClient } from '@tanstack/react-query';
 import { CharacterKeys } from '@/hooks/query/types';
@@ -50,7 +51,11 @@ export default function DetailsPage() {
       </nav>
 
       {isFetching && (
-        <img className="details-loading-indicator" src={loadingSVG} />
+        <Image
+          className="details-loading-indicator"
+          src={loadingSVG}
+          alt="Loading..."
+        />
       )}
 
       {isError && (
@@ -64,9 +69,10 @@ export default function DetailsPage() {
 
       {!isFetching && !isError && character && (
         <article className="character-details">
-          <img
+          <Image
             className="character-details-image"
             src={`${character.image}?0`}
+            alt={`Image of ${character.name}`}
           />
           <div className="character-details-info">
             <h4 className="character-details-name">{character.name}</h4>
