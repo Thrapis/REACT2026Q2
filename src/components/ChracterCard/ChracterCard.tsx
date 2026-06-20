@@ -1,3 +1,5 @@
+'use client';
+
 import Image from 'next/image';
 import { useSelectionStore } from '@/stores/Selection.store';
 import type { CharacterSearchResultEntry } from '@/types/CharacterSearchResult';
@@ -37,8 +39,10 @@ export default function ChracterCard({
       />
       <Image
         className="character-card-image"
-        src={`${character.image}?0`}
+        src={`${character.image}`}
         alt={`Image of ${character.name}`}
+        height={80}
+        width={80}
       />
       <div className="character-card-info">
         <h4 className="character-card-name">{character.name}</h4>

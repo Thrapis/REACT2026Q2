@@ -1,12 +1,15 @@
-import { Link } from 'react-router-dom';
-import './NotFoundPage.css';
+'use client';
+
+import Link from 'next/link';
+
+import './not-found.css';
 
 export default function NotFoundPage() {
   return (
     <section className="not-found-section">
       <h2>Page 404</h2>
       <span>Page Not Found</span>
-      <Link to={'/'}>Return</Link>
+      <Link href={'/'}>Return</Link>
     </section>
   );
 }

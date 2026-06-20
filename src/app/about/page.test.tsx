@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import AboutPage from './AboutPage';
+import AboutPage from './page';
 
 describe('AboutPage', () => {
   const renderWithRouter = () => {

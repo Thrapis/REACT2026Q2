@@ -1,7 +1,7 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
-import HomePage from './HomePage';
+import HomePage from './page';
 import * as api from '@/api/RickAndMortyAPI';
 import type { CharacterSearchResult } from '@/types/CharacterSearchResult';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';

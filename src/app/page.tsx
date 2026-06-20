@@ -1,5 +1,8 @@
-import { useRef } from 'react';
-import { Outlet, useNavigate, useSearchParams } from 'react-router-dom';
+'use client';
+
+import Image from 'next/image';
+import { useRef, useEffect } from 'react';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
 import useLocalStorage from '@/hooks/local-storage/UseLocalStorage';
 import { useCharacterSearch } from '@/hooks/query/UseCharacterSearch';
@@ -10,22 +13,27 @@ import ErrorMessage from '@/components/ErrorMessage/ErrorMessage';
 import ErrorThrowButton from '@/components/ErrorThrowButton/ErrorThrowButton';
 import { CharacterKeys } from '@/hooks/query/types';
 
-import './HomePage.css';
+import './page.css';
 import loadingSVG from '@/assets/loading.svg';
-import Image from 'next/image';
 
 const LAST_SEARCH_KEY = 'last-search';
 
-export default function HomePage() {
+interface HomePageProps {
+  children?: React.ReactNode;
+}
+
+export default function HomePage({ children }: HomePageProps) {
   const [storageSearchValue, setStorageSearchValue] =
     useLocalStorage(LAST_SEARCH_KEY);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const navigate = useNavigate();
+
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
   const searchInput = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
 
-  const queryFromParams = searchParams.get('search');
-  const pageFromParams = Number(searchParams.get('page')) || 1;
+  const queryFromParams = searchParams?.get('search') ?? null;
+  const pageFromParams = Number(searchParams?.get('page')) || 1;
 
   const initialQuery =
     queryFromParams !== null ? queryFromParams : storageSearchValue || '';
@@ -36,28 +44,40 @@ export default function HomePage() {
     initialPage
   );
 
+  useEffect(() => {
+    if (queryFromParams === null && storageSearchValue) {
+      const params = new URLSearchParams();
+      params.set('search', storageSearchValue);
+      params.set('page', '1');
+      router.replace(`${pathname}?${params.toString()}`);
+    }
+  }, [queryFromParams, storageSearchValue, router, pathname]);
+
   const handleSearch = () => {
     if (searchInput?.current) {
       const query = searchInput.current.value.trim();
       searchInput.current.value = query;
 
       setStorageSearchValue(query);
-      setSearchParams({
-        search: query,
-        page: '1',
-      });
+
+      const params = new URLSearchParams();
+      params.set('search', query);
+      params.set('page', '1');
+      router.push(`${pathname}?${params.toString()}`);
     }
   };
 
   const handleSelectPage = (page: number) => {
-    setSearchParams({
-      search: initialQuery,
-      page: `${page}`,
-    });
+    const params = new URLSearchParams(searchParams?.toString() || '');
+    params.set('page', `${page}`);
+    router.push(`${pathname}?${params.toString()}`);
   };
 
   const handleSelectCharacter = (characterId: number) => {
-    navigate(`/details/${characterId}?${searchParams.toString()}`);
+    const currentQueries = searchParams?.toString() || '';
+    router.push(
+      `/details/${characterId}${currentQueries ? `?${currentQueries}` : ''}`
+    );
   };
 
   const handleRefresh = () => {
@@ -127,9 +147,7 @@ export default function HomePage() {
             />
           )}
         </div>
-        <div className="details-side">
-          <Outlet />
-        </div>
+        <div className="details-side">{children}</div>
       </section>
 
       <section className="app-control-section">
@@ -142,6 +160,7 @@ export default function HomePage() {
             className="loading-indicator"
             src={loadingSVG}
             alt="Loading..."
+            loading="eager"
           />
         </div>
       )}

@@ -1,3 +1,5 @@
+'use client';
+
 import { useSelectionStore } from '@/stores/Selection.store';
 import { convertToCSV, downloadFile } from '@/utils/FileHelper';
 

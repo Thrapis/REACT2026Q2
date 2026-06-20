@@ -1,16 +1,21 @@
+'use client';
+
 import { useState } from 'react';
 
 export default function useLocalStorage(key: string, initialValue?: string) {
-  let init = initialValue ?? null;
-  if (init === null) {
-    init = localStorage.getItem(key);
-  }
-
-  const [value, setValue] = useState<string | null>(init);
+  const [value, setValue] = useState<string | null>(() => {
+    if (typeof window === 'undefined') {
+      return initialValue ?? null;
+    }
+    const saved = localStorage.getItem(key);
+    return saved !== null ? saved : (initialValue ?? null);
+  });
 
   const setItemValue = (newValue: string) => {
-    localStorage.setItem(key, newValue);
     setValue(newValue);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(key, newValue);
+    }
   };
 
   return [value, setItemValue] as const;

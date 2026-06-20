@@ -1,3 +1,5 @@
+'use client';
+
 import './Pagination.css';
 
 export interface PaginationProps {

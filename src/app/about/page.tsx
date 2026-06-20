@@ -1,5 +1,8 @@
-import { Link } from 'react-router-dom';
-import './AboutPage.css';
+'use client';
+
+import Link from 'next/link';
+
+import './page.css';
 
 export default function AboutPage() {
   return (
@@ -16,7 +19,7 @@ export default function AboutPage() {
             <a href="https://rs.school/courses/reactjs">RSScool</a>
           </div>
         </div>
-        <Link to={'/'}>Return</Link>
+        <Link href={'/'}>Return</Link>
       </div>
     </section>
   );

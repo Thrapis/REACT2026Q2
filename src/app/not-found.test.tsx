@@ -1,8 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import NotFoundPage from './NotFoundPage';
-
+import NotFoundPage from './not-found';
 describe('NotFoundPage', () => {
   const renderWithRouter = () => {
     return render(
