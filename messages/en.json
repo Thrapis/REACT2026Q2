@@ -55,6 +55,7 @@
   },
   "SelectionFlyout": {
     "download": "Download",
+    "downloading": "Downloading...",
     "unselectAll": "Unselect All"
   },
   "ThemeSwitcher": {

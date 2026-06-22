@@ -1,5 +1,5 @@
-import { screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { screen, fireEvent, waitFor } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import SelectionFlyout from './SelectionFlyout';
 import { useSelectionStore } from '@/stores/Selection.store';
 import { MOCK_CHARACTERS } from '@/test-utils/Api';
@@ -13,8 +13,29 @@ describe('SelectionFlyout', () => {
   const mockRemoveSelection = vi.fn();
   const mockClearSelection = vi.fn();
 
+  const mockCreateObjectURL = vi.fn(
+    () => 'blob:http://localhost/downloooooooad'
+  );
+  const mockRevokeObjectURL = vi.fn();
+
   beforeEach(() => {
     vi.clearAllMocks();
+
+    global.URL.createObjectURL = mockCreateObjectURL;
+    global.URL.revokeObjectURL = mockRevokeObjectURL;
+
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      blob: vi
+        .fn()
+        .mockResolvedValue(
+          new Blob(['name;status;image'], { type: 'text/csv' })
+        ),
+    });
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   it('should have hidden class when characters list is empty', () => {
@@ -76,5 +97,85 @@ describe('SelectionFlyout', () => {
     fireEvent.click(clearButton);
 
     expect(mockClearSelection).toHaveBeenCalledTimes(1);
+  });
+
+  it('should change button text to downloading state and trigger server side compilation on click', async () => {
+    vi.mocked(useSelectionStore).mockReturnValue({
+      characters: MOCK_CHARACTERS,
+      removeSelection: mockRemoveSelection,
+      clearSelection: mockClearSelection,
+    });
+    const mockAppend = vi.spyOn(document.body, 'append');
+
+    renderWithI18N(<SelectionFlyout />);
+
+    const downloadButton = screen.getByRole('button', { name: 'Download (2)' });
+    fireEvent.click(downloadButton);
+
+    expect(screen.getByText(/downloading/i)).toBeInTheDocument();
+
+    expect(global.fetch).toHaveBeenCalledWith('/api/export-characters', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ characters: MOCK_CHARACTERS }),
+    });
+
+    await waitFor(() => {
+      expect(mockCreateObjectURL).toHaveBeenCalled();
+      expect(mockAppend).toHaveBeenCalled();
+      expect(mockRevokeObjectURL).toHaveBeenCalled();
+    });
+
+    expect(screen.getByText('Download (2)')).toBeInTheDocument();
+  });
+
+  it('should handle fetch server error safely and log error in console without crashing', async () => {
+    vi.mocked(useSelectionStore).mockReturnValue({
+      characters: MOCK_CHARACTERS,
+      removeSelection: mockRemoveSelection,
+      clearSelection: mockClearSelection,
+    });
+
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: false,
+    });
+
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    renderWithI18N(<SelectionFlyout />);
+
+    const downloadButton = screen.getByRole('button', { name: 'Download (2)' });
+    fireEvent.click(downloadButton);
+
+    await waitFor(() => {
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Failed to export CSV from server:',
+        expect.any(Error)
+      );
+    });
+
+    expect(screen.getByText('Download (2)')).toBeInTheDocument();
+  });
+
+  it('should catch network breakdown errors and reset loading state', async () => {
+    vi.mocked(useSelectionStore).mockReturnValue({
+      characters: MOCK_CHARACTERS,
+      removeSelection: mockRemoveSelection,
+      clearSelection: mockClearSelection,
+    });
+
+    global.fetch = vi.fn().mockRejectedValue(new Error('Network Error'));
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    renderWithI18N(<SelectionFlyout />);
+
+    const downloadButton = screen.getByRole('button', { name: 'Download (2)' });
+    fireEvent.click(downloadButton);
+
+    await waitFor(() => {
+      expect(consoleSpy).toHaveBeenCalled();
+    });
+
+    expect(screen.getByText('Download (2)')).toBeInTheDocument();
   });
 });

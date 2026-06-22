@@ -55,6 +55,7 @@
   },
   "SelectionFlyout": {
     "download": "Сцягнуць",
+    "downloading": "Сцягваецца...",
     "unselectAll": "Зняць выбар з усіх"
   },
   "ThemeSwitcher": {

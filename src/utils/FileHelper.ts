@@ -12,19 +12,3 @@ export const convertToCSV = (list: CharacterSearchResultEntry[]) => {
     .map((v) => v.join(';'))
     .join('\n');
 };
-
-export const downloadFile = (data: string, fileName: string = 'file') => {
-  const blob = new Blob([data], { type: 'text/csv' });
-  const objectURL = URL.createObjectURL(blob);
-
-  const temporaryAnchorElement = document.createElement('a');
-  temporaryAnchorElement.href = objectURL;
-  temporaryAnchorElement.download = fileName;
-  temporaryAnchorElement.style.display = 'none';
-
-  document.body.append(temporaryAnchorElement);
-  temporaryAnchorElement.click();
-  temporaryAnchorElement.remove();
-
-  URL.revokeObjectURL(objectURL);
-};
