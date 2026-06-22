@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useCharacter } from './UseCharacter';
 import * as api from '@/api/RickAndMortyAPI';
 import { describe, it, expect, vi } from 'vitest';
-import type { CharacterSearchResultEntry } from '@/types/CharacterSearchResult';
+import { MOCK_CHARACTER } from '@/test-utils/Api';
 
 const createWrapper = () => {
   const queryClient = new QueryClient({
@@ -20,19 +20,10 @@ const createWrapper = () => {
 };
 
 describe('useCharacter', () => {
-  const mockCharacter: CharacterSearchResultEntry = {
-    id: 1,
-    name: 'Rick Sanchez',
-    status: 'Alive',
-    species: 'Human',
-    gender: 'Male',
-    image: 'image_link',
-  };
-
   it('should fetch character successfully', async () => {
     const getCharacterSpy = vi
       .spyOn(api, 'getCharacter')
-      .mockResolvedValue(mockCharacter);
+      .mockResolvedValue(MOCK_CHARACTER);
 
     const { result } = renderHook(() => useCharacter(1), {
       wrapper: createWrapper(),
@@ -42,7 +33,7 @@ describe('useCharacter', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(result.current.data).toEqual(mockCharacter);
+    expect(result.current.data).toEqual(MOCK_CHARACTER);
     expect(getCharacterSpy).toHaveBeenCalledWith(1);
   });
 

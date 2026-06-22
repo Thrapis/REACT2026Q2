@@ -1,7 +1,8 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest';
 import ErrorThrowButton from './ErrorThrowButton';
 import React from 'react';
+import { renderWithI18N } from '@/test-utils/Render';
 
 class TestBoundary extends React.Component<
   { children: React.ReactNode },
@@ -30,7 +31,7 @@ describe('ErrorThrowButton', () => {
   });
 
   it('should throw error on button click', () => {
-    render(
+    renderWithI18N(
       <TestBoundary>
         <ErrorThrowButton />
       </TestBoundary>

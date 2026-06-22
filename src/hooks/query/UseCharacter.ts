@@ -1,3 +1,5 @@
+'use client';
+
 import { getCharacter } from '@/api/RickAndMortyAPI';
 import { useQuery } from '@tanstack/react-query';
 import { CharacterKeys } from './types';

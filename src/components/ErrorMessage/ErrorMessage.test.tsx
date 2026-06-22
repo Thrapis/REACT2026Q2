@@ -1,6 +1,7 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import ErrorMessage from './ErrorMessage';
+import { renderWithI18N } from '@/test-utils/Render';
 
 describe('ErrorMessage', () => {
   const mockProps = {
@@ -13,14 +14,14 @@ describe('ErrorMessage', () => {
   });
 
   it('should show error message', () => {
-    render(<ErrorMessage {...mockProps} />);
+    renderWithI18N(<ErrorMessage {...mockProps} />);
 
     expect(screen.getByRole('heading', { name: 'Error' })).toBeInTheDocument();
     expect(screen.getByText(mockProps.message)).toBeInTheDocument();
   });
 
   it('should call onRetry on Retry Search click', () => {
-    render(<ErrorMessage {...mockProps} />);
+    renderWithI18N(<ErrorMessage {...mockProps} />);
 
     const button = screen.getByRole('button', { name: 'Retry Search' });
     fireEvent.click(button);
