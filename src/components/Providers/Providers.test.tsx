@@ -3,6 +3,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import Providers from './Providers';
 import { useQueryClient } from '@tanstack/react-query';
 import { DEFAULT_CACHE_TTL_MS } from '@/constants/EnvironmentVariables';
+import { LOCALE_MESSAGES_MAP } from '@/i18n/locales';
 
 function TestChild() {
   const queryClient = useQueryClient();
@@ -32,7 +33,7 @@ describe('Providers Component', () => {
 
   it('should render children successfully inside all provider wrappers', () => {
     render(
-      <Providers>
+      <Providers locale="en" messages={LOCALE_MESSAGES_MAP['en']}>
         <TestChild />
       </Providers>
     );
@@ -45,7 +46,7 @@ describe('Providers Component', () => {
     delete process.env.NEXT_PUBLIC_CACHE_TTL_MS;
 
     render(
-      <Providers>
+      <Providers locale="en" messages={LOCALE_MESSAGES_MAP['en']}>
         <TestChild />
       </Providers>
     );
@@ -61,7 +62,7 @@ describe('Providers Component', () => {
     const { default: Providers } = await import('./Providers');
 
     render(
-      <Providers>
+      <Providers locale="en" messages={LOCALE_MESSAGES_MAP['en']}>
         <TestChild />
       </Providers>
     );

@@ -1,6 +1,8 @@
 import enMessages from '../../messages/en.json';
 import beMessages from '../../messages/be.json';
 
+export type LocaleMessageType = typeof enMessages;
+
 export const LOCALES = ['en', 'be'] as const;
 
 export type Locale = (typeof LOCALES)[number];

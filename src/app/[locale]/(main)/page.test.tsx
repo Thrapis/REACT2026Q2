@@ -10,6 +10,17 @@ vi.mock('@/api/RickAndMortyAPI', () => ({
   searchCharacters: vi.fn(),
 }));
 
+vi.mock('@/i18n/navigation', () => ({
+  Link: ({ children, href }: { children: React.ReactNode; href: string }) => (
+    <a href={href}>{children}</a>
+  ),
+  usePathname: () => '/',
+  useRouter: () => ({
+    push: vi.fn(),
+    replace: vi.fn(),
+  }),
+}));
+
 let mockParams = new URLSearchParams();
 const mockPush = vi.fn();
 const mockReplace = vi.fn();

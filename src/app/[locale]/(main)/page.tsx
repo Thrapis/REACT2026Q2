@@ -2,37 +2,39 @@
 
 import Image from 'next/image';
 import { useRef, useEffect } from 'react';
-import { useRouter, useSearchParams, usePathname } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 
 import useLocalStorage from '@/hooks/local-storage/UseLocalStorage';
 import { useCharacterSearch } from '@/hooks/query/UseCharacterSearch';
+import { useRouter, usePathname } from '@/i18n/navigation';
 
 import ChracterCard from '@/components/ChracterCard/ChracterCard';
 import Pagination from '@/components/Pagination/Pagination';
 import ErrorMessage from '@/components/ErrorMessage/ErrorMessage';
 import ErrorThrowButton from '@/components/ErrorThrowButton/ErrorThrowButton';
 import { CharacterKeys } from '@/hooks/query/types';
+import { LAST_SEARCH_STORAGE_KEY } from '@/constants/LocalStorage';
 
 import './page.css';
 import loadingSVG from '@/assets/loading.svg';
-
-const LAST_SEARCH_KEY = 'last-search';
 
 interface HomePageProps {
   children?: React.ReactNode;
 }
 
 export default function HomePage({ children }: HomePageProps) {
-  const [storageSearchValue, setStorageSearchValue] =
-    useLocalStorage(LAST_SEARCH_KEY);
+  const [storageSearchValue, setStorageSearchValue] = useLocalStorage(
+    LAST_SEARCH_STORAGE_KEY
+  );
 
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const searchInput = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
+
   const t = useTranslations('HomePage');
 
   const queryFromParams = searchParams?.get('search') ?? null;
@@ -78,6 +80,7 @@ export default function HomePage({ children }: HomePageProps) {
 
   const handleSelectCharacter = (characterId: number) => {
     const currentQueries = searchParams?.toString() || '';
+
     router.push(
       `/details/${characterId}${currentQueries ? `?${currentQueries}` : ''}`
     );

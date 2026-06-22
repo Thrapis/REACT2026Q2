@@ -60,5 +60,17 @@
   "ThemeSwitcher": {
     "lightTheme": "Светлая тэма",
     "darkTheme": "Цёмная тэма"
+  },
+  "Character": {
+    "aliveStatus": "Жывы",
+    "deadStatus": "Мёртвы",
+    "unknownStatus": "Невядома",
+    "humanSpecies": "Чалавек",
+    "humanoidSpecies": "Гуманоід",
+    "robotSpecies": "Робат",
+    "femaleGender": "Жанчына",
+    "maleGender": "Мужчына",
+    "genderlessGender": "Бясполы",
+    "unknownGender": "Невядомы"
   }
 }

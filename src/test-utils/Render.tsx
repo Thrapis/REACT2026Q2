@@ -1,8 +1,8 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render } from '@testing-library/react';
+import { NextIntlClientProvider } from 'next-intl';
 
-import { type Locale } from '@/i18n/locales';
-import IntlProvider from '@/components/Providers/IntlProvider/IntlProvider';
+import { LOCALE_MESSAGES_MAP, type Locale } from '@/i18n/locales';
 
 export const renderWithBasicProviders = (
   children: React.ReactNode,
@@ -12,12 +12,22 @@ export const renderWithBasicProviders = (
   const queryClient =
     queryClientInstance ||
     new QueryClient({
-      defaultOptions: { queries: { retry: false } },
+      defaultOptions: {
+        queries: {
+          retry: false,
+          gcTime: 0,
+        },
+      },
     });
 
   return render(
     <QueryClientProvider client={queryClient}>
-      <IntlProvider defaultLocale={locale}>{children}</IntlProvider>
+      <NextIntlClientProvider
+        locale={locale}
+        messages={LOCALE_MESSAGES_MAP[locale]}
+      >
+        {children}
+      </NextIntlClientProvider>
     </QueryClientProvider>
   );
 };
@@ -26,5 +36,12 @@ export const renderWithI18N = (
   children: React.ReactNode,
   locale: Locale = 'en'
 ) => {
-  return render(<IntlProvider defaultLocale={locale}>{children}</IntlProvider>);
+  return render(
+    <NextIntlClientProvider
+      locale={locale}
+      messages={LOCALE_MESSAGES_MAP[locale]}
+    >
+      {children}
+    </NextIntlClientProvider>
+  );
 };

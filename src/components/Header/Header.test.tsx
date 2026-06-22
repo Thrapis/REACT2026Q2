@@ -8,6 +8,17 @@ vi.mock('@/hooks/theme/UseTheme', () => ({
   useTheme: vi.fn(),
 }));
 
+vi.mock('@/i18n/navigation', () => ({
+  Link: ({ children, href }: { children: React.ReactNode; href: string }) => (
+    <a href={href}>{children}</a>
+  ),
+  usePathname: () => '/',
+  useRouter: () => ({
+    push: vi.fn(),
+    replace: vi.fn(),
+  }),
+}));
+
 describe('Header Component', () => {
   const mockToggleTheme = vi.fn();
 

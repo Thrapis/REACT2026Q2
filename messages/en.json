@@ -60,5 +60,17 @@
   "ThemeSwitcher": {
     "lightTheme": "Light Theme",
     "darkTheme": "Dark Theme"
+  },
+  "Character": {
+    "aliveStatus": "Alive",
+    "deadStatus": "Dead",
+    "unknownStatus": "Unknown",
+    "humanSpecies": "Human",
+    "humanoidSpecies": "Humanoid",
+    "robotSpecies": "Robot",
+    "femaleGender": "Female",
+    "maleGender": "Male",
+    "genderlessGender": "Genderless",
+    "unknownGender": "Unknown"
   }
 }

@@ -1,21 +1,30 @@
 'use client';
 
-import { useLocale } from '@/hooks/locale/UseLocale';
+import { useState } from 'react';
+import { useLocale } from 'next-intl';
+
+import { useRouter, usePathname } from '@/i18n/navigation';
 import { LOCALES, type Locale } from '@/i18n/locales';
 
 import './LanguageSelector.css';
-import { useState } from 'react';
 
 export default function LanguageSelector() {
-  const { locale, setLocale } = useLocale();
   const [open, setOpen] = useState(false);
+
+  const locale = useLocale();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const setLocale = (newLocale: string) => {
+    router.replace(pathname, { locale: newLocale });
+  };
 
   const handleToggleOpen = () => {
     setOpen((prev) => !prev);
   };
 
-  const setLocaleAndClose = (loc: Locale) => {
-    setLocale(loc);
+  const setLocaleAndClose = (newLocale: Locale) => {
+    setLocale(newLocale);
     setOpen(false);
   };
 

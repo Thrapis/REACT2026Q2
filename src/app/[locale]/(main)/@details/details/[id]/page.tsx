@@ -2,13 +2,13 @@
 
 import Image from 'next/image';
 import { use } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 
 import { useCharacter } from '@/hooks/query/UseCharacter';
 import { CharacterKeys } from '@/hooks/query/types';
-
+import { useRouter } from '@/i18n/navigation';
 import ErrorMessage from '@/components/ErrorMessage/ErrorMessage';
 
 import './page.css';
@@ -24,7 +24,9 @@ export default function DetailsPage({ params }: DetailsPageProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const queryClient = useQueryClient();
+
   const t = useTranslations('DetailsPage');
+  const tc = useTranslations('Character');
 
   const characterId = id ? parseInt(id, 10) : undefined;
 
@@ -94,13 +96,22 @@ export default function DetailsPage({ params }: DetailsPageProps) {
             <h4 className="character-details-name">{character.name}</h4>
             <div className="character-details-description">
               <span>
-                {t('speciesProp')} {character.species}
+                {t('speciesProp')}{' '}
+                {tc.has(`${character.species.toLowerCase()}Species`)
+                  ? tc(`${character.species.toLowerCase()}Species`)
+                  : character.species}
               </span>
               <span>
-                {t('genderProp')} {character.gender}
+                {t('genderProp')}{' '}
+                {tc.has(`${character.gender.toLowerCase()}Gender`)
+                  ? tc(`${character.gender.toLowerCase()}Gender`)
+                  : character.gender}
               </span>
               <span>
-                {t('statusProp')} {character.status}
+                {t('statusProp')}{' '}
+                {tc.has(`${character.status.toLowerCase()}Status`)
+                  ? tc(`${character.status.toLowerCase()}Status`)
+                  : character.status}
               </span>
             </div>
           </div>

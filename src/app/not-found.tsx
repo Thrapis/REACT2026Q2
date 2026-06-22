@@ -1,18 +1,15 @@
-'use client';
+import { redirect } from 'next/navigation';
+import { cookies } from 'next/headers';
 
-import Link from 'next/link';
+import { isValidLocale } from '@/i18n/locales';
+import { NEXT_LOCALE_COOKIE_KEY } from '@/constants/Cookies';
 
-import './not-found.css';
-import { useTranslations } from 'next-intl';
+export default async function GlobalNotFound() {
+  const cookieStore = await cookies();
+  const lastUsedLocale = cookieStore.get(NEXT_LOCALE_COOKIE_KEY)?.value;
 
-export default function NotFoundPage() {
-  const t = useTranslations('NotFoundPage');
+  const targetLocale =
+    lastUsedLocale && isValidLocale(lastUsedLocale) ? lastUsedLocale : 'en';
 
-  return (
-    <section className="not-found-section">
-      <h2>{t('page404')}</h2>
-      <span>{t('pageNotFound')}</span>
-      <Link href={'/'}>{t('return')}</Link>
-    </section>
-  );
+  redirect(`/${targetLocale}/404`);
 }

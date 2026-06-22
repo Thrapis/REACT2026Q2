@@ -1,7 +1,13 @@
 import { screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import NotFoundPage from './not-found';
 import { renderWithI18N } from '@/test-utils/Render';
+
+vi.mock('@/i18n/navigation', () => ({
+  Link: ({ children, href }: { children: React.ReactNode; href: string }) => (
+    <a href={href}>{children}</a>
+  ),
+}));
 
 describe('NotFoundPage', () => {
   const renderPage = () => {
