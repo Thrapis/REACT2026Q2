@@ -1,5 +1,7 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 import './ErrorMessage.css';
 
 export interface ErrorMessageProps {
@@ -7,12 +9,14 @@ export interface ErrorMessageProps {
   onRetry: () => void;
 }
 
-export default function Pagination({ message, onRetry }: ErrorMessageProps) {
+export default function ErrorMessage({ message, onRetry }: ErrorMessageProps) {
+  const t = useTranslations('ErrorMessage');
+
   return (
     <div className="error-message">
-      <h4>Error</h4>
+      <h4>{t('error')}</h4>
       <p>{message}</p>
-      <button onClick={onRetry}>Retry Search</button>
+      <button onClick={onRetry}>{t('retrySearch')}</button>
     </div>
   );
 }

@@ -1,8 +1,9 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import SelectionFlyout from './SelectionFlyout';
 import { useSelectionStore } from '@/stores/Selection.store';
 import { MOCK_CHARACTERS } from '@/test-utils/Api';
+import { renderWithI18N } from '@/test-utils/Render';
 
 vi.mock('@/stores/Selection.store', () => ({
   useSelectionStore: vi.fn(),
@@ -23,7 +24,7 @@ describe('SelectionFlyout', () => {
       clearSelection: mockClearSelection,
     });
 
-    const { container } = render(<SelectionFlyout />);
+    const { container } = renderWithI18N(<SelectionFlyout />);
     const component = container.firstChild as HTMLElement;
 
     expect(component).toHaveClass('selection-flyout-container');
@@ -37,7 +38,7 @@ describe('SelectionFlyout', () => {
       clearSelection: mockClearSelection,
     });
 
-    const { container } = render(<SelectionFlyout />);
+    const { container } = renderWithI18N(<SelectionFlyout />);
     const component = container.firstChild as HTMLElement;
 
     expect(component).not.toHaveClass('hidden');
@@ -53,7 +54,7 @@ describe('SelectionFlyout', () => {
       clearSelection: mockClearSelection,
     });
 
-    render(<SelectionFlyout />);
+    renderWithI18N(<SelectionFlyout />);
 
     const deleteButtons = screen.getAllByRole('button', { name: 'X' });
     fireEvent.click(deleteButtons[0]);
@@ -69,7 +70,7 @@ describe('SelectionFlyout', () => {
       clearSelection: mockClearSelection,
     });
 
-    render(<SelectionFlyout />);
+    renderWithI18N(<SelectionFlyout />);
 
     const clearButton = screen.getByRole('button', { name: 'Unselect All' });
     fireEvent.click(clearButton);

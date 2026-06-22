@@ -1,11 +1,14 @@
 'use client';
 
+import Image from 'next/image';
 import { use } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import Image from 'next/image';
-import { useCharacter } from '@/hooks/query/UseCharacter';
 import { useQueryClient } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
+
+import { useCharacter } from '@/hooks/query/UseCharacter';
 import { CharacterKeys } from '@/hooks/query/types';
+
 import ErrorMessage from '@/components/ErrorMessage/ErrorMessage';
 
 import './page.css';
@@ -21,6 +24,7 @@ export default function DetailsPage({ params }: DetailsPageProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const queryClient = useQueryClient();
+  const t = useTranslations('DetailsPage');
 
   const characterId = id ? parseInt(id, 10) : undefined;
 
@@ -47,8 +51,8 @@ export default function DetailsPage({ params }: DetailsPageProps) {
   return (
     <section className="details-section">
       <div className="details-title">
-        <button onClick={handleRefresh}>Refresh</button>
-        <h3>Details:</h3>
+        <button onClick={handleRefresh}>{t('refresh')}</button>
+        <h3>{t('details')}</h3>
       </div>
       <nav className="details-navigation">
         <button
@@ -63,7 +67,7 @@ export default function DetailsPage({ params }: DetailsPageProps) {
         <Image
           className="details-loading-indicator"
           src={loadingSVG}
-          alt="Loading..."
+          alt={t('altLoadingImage')}
           loading="eager"
         />
       )}
@@ -71,7 +75,7 @@ export default function DetailsPage({ params }: DetailsPageProps) {
       {isError && (
         <ErrorMessage
           message={
-            error instanceof Error ? error.message : 'Something went wrong'
+            error instanceof Error ? error.message : t('unknownErrorMessage')
           }
           onRetry={handleRefresh}
         />
@@ -82,16 +86,22 @@ export default function DetailsPage({ params }: DetailsPageProps) {
           <Image
             className="character-details-image"
             src={`${character.image}`}
-            alt={`Image of ${character.name}`}
+            alt={`${t('altImageOf')} ${character.name}`}
             width={280}
             height={280}
           />
           <div className="character-details-info">
             <h4 className="character-details-name">{character.name}</h4>
             <div className="character-details-description">
-              <span>Species: {character.species}</span>
-              <span>Gender: {character.gender}</span>
-              <span>Status: {character.status}</span>
+              <span>
+                {t('speciesProp')} {character.species}
+              </span>
+              <span>
+                {t('genderProp')} {character.gender}
+              </span>
+              <span>
+                {t('statusProp')} {character.status}
+              </span>
             </div>
           </div>
         </article>

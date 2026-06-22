@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, beforeEach } from 'vitest';
-import { ThemeContext } from './ThemeContext';
+import { ThemeContext } from '../../../context/Theme/ThemeContext';
 import { useContext } from 'react';
 import { ThemeProvider } from './ThemeProvider';
 import { THEME_STORAGE_KEY } from '@/constants/LocalStorage';

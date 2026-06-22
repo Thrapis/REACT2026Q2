@@ -1,7 +1,8 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import Header from './Header';
 import { useTheme } from '@/hooks/theme/UseTheme';
+import { renderWithI18N } from '@/test-utils/Render';
 
 vi.mock('@/hooks/theme/UseTheme', () => ({
   useTheme: vi.fn(),
@@ -14,17 +15,13 @@ describe('Header Component', () => {
     vi.clearAllMocks();
   });
 
-  const renderHeader = () => {
-    return render(<Header />);
-  };
-
   it('should render navigation links correctly', () => {
     vi.mocked(useTheme).mockReturnValue({
       theme: 'light',
       toggleTheme: mockToggleTheme,
     });
 
-    renderHeader();
+    renderWithI18N(<Header />);
 
     const homeLink = screen.getByRole('link', { name: 'Home' });
     const aboutLink = screen.getByRole('link', { name: 'About' });
@@ -33,19 +30,5 @@ describe('Header Component', () => {
     expect(homeLink).toHaveAttribute('href', '/');
     expect(aboutLink).toBeInTheDocument();
     expect(aboutLink).toHaveAttribute('href', '/about');
-  });
-
-  it('should call toggleTheme when button clicked', () => {
-    vi.mocked(useTheme).mockReturnValue({
-      theme: 'light',
-      toggleTheme: mockToggleTheme,
-    });
-
-    renderHeader();
-
-    const themeButton = screen.getByRole('button');
-    fireEvent.click(themeButton);
-
-    expect(mockToggleTheme).toHaveBeenCalledTimes(1);
   });
 });

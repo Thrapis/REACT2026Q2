@@ -1,17 +1,22 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import Pagination from './Pagination';
+import { renderWithI18N } from '@/test-utils/Render';
 
 describe('Pagination', () => {
   it('should disable Prev button if on the first page', () => {
-    render(<Pagination current={1} pages={5} onPageSelect={() => {}} />);
+    renderWithI18N(
+      <Pagination current={1} pages={5} onPageSelect={() => {}} />
+    );
 
     const prevButton = screen.getByRole('button', { name: /prev/i });
     expect(prevButton).toBeDisabled();
   });
 
   it('should disable Next button if on the last page', () => {
-    render(<Pagination current={5} pages={5} onPageSelect={() => {}} />);
+    renderWithI18N(
+      <Pagination current={5} pages={5} onPageSelect={() => {}} />
+    );
 
     const nextButton = screen.getByRole('button', { name: /next/i });
     expect(nextButton).toBeDisabled();
@@ -19,7 +24,7 @@ describe('Pagination', () => {
 
   it('should call onPageSelect with previous page number when Prev is clicked', () => {
     const onPageSelectMock = vi.fn();
-    render(
+    renderWithI18N(
       <Pagination current={3} pages={5} onPageSelect={onPageSelectMock} />
     );
 
@@ -31,7 +36,7 @@ describe('Pagination', () => {
 
   it('should call onPageSelect with next page number when Next is clicked', () => {
     const onPageSelectMock = vi.fn();
-    render(
+    renderWithI18N(
       <Pagination current={3} pages={5} onPageSelect={onPageSelectMock} />
     );
 
@@ -42,7 +47,9 @@ describe('Pagination', () => {
   });
 
   it('should render all page buttons and highlight the current page', () => {
-    render(<Pagination current={2} pages={3} onPageSelect={() => {}} />);
+    renderWithI18N(
+      <Pagination current={2} pages={3} onPageSelect={() => {}} />
+    );
 
     const pageButtons = screen.getAllByRole('button');
     expect(pageButtons).toHaveLength(5);
@@ -53,7 +60,7 @@ describe('Pagination', () => {
 
   it('should call onPageSelect with specific page number when a page button is clicked', () => {
     const onPageSelectMock = vi.fn();
-    render(
+    renderWithI18N(
       <Pagination current={1} pages={3} onPageSelect={onPageSelectMock} />
     );
 
@@ -65,7 +72,7 @@ describe('Pagination', () => {
 
   it('should not call onPageSelect when clicking the already active page button', () => {
     const onPageSelectMock = vi.fn();
-    render(
+    renderWithI18N(
       <Pagination current={2} pages={3} onPageSelect={onPageSelectMock} />
     );
 

@@ -1,6 +1,7 @@
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import AboutPage from './page';
+import { renderWithI18N } from '@/test-utils/Render';
 
 const GITHUB_NAME = 'Thrapis';
 const GITHUB_LINK = 'https://github.com/Thrapis';
@@ -9,7 +10,7 @@ const RSSCHOOL_LINK = 'https://rs.school/courses/reactjs';
 
 describe('AboutPage', () => {
   const renderPage = () => {
-    return render(<AboutPage />);
+    return renderWithI18N(<AboutPage />);
   };
 
   it('should render heading and text content correctly', () => {

@@ -1,0 +1,64 @@
+{
+  "HomePage": {
+    "search": "Search",
+    "spamInfo": "To get API Error spam \"Refresh\" button",
+    "refresh": "Refresh",
+    "results": "Results:",
+    "noResults": "*No results*",
+    "unknownErrorMessage": "Something went wrong",
+    "altLoadingImage": "Loading..."
+  },
+  "DetailsPage": {
+    "refresh": "Refresh",
+    "details": "Details:",
+    "unknownErrorMessage": "Something went wrong",
+    "altLoadingImage": "Loading...",
+    "altImageOf": "Image of",
+    "speciesProp": "Species:",
+    "genderProp": "Gender:",
+    "statusProp": "Status:"
+  },
+  "AboutPage": {
+    "about": "About",
+    "author": "Author",
+    "school": "School",
+    "return": "Return"
+  },
+  "NotFoundPage": {
+    "page404": "Page 404",
+    "pageNotFound": "Page Not Found",
+    "return": "Return"
+  },
+  "ChracterCard": {
+    "altImageOf": "Image of"
+  },
+  "ErrorBoundary": {
+    "errorLogPrefix": "Boundry caught error:",
+    "errorTitle": "Something went wrong.",
+    "reload": "Reload"
+  },
+  "ErrorMessage": {
+    "error": "Error",
+    "retrySearch": "Retry Search"
+  },
+  "ErrorThrowButton": {
+    "errorMessage": "Manual throwed error",
+    "throwError": "Throw Error"
+  },
+  "Header": {
+    "home": "Home",
+    "about": "About"
+  },
+  "Pagination": {
+    "prev": "Prev",
+    "next": "Next"
+  },
+  "SelectionFlyout": {
+    "download": "Download",
+    "unselectAll": "Unselect All"
+  },
+  "ThemeSwitcher": {
+    "lightTheme": "Light Theme",
+    "darkTheme": "Dark Theme"
+  }
+}

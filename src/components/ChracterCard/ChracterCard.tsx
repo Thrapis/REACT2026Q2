@@ -1,6 +1,8 @@
 'use client';
 
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
+
 import { useSelectionStore } from '@/stores/Selection.store';
 import type { CharacterSearchResultEntry } from '@/types/CharacterSearchResult';
 
@@ -15,6 +17,8 @@ export default function ChracterCard({
   character,
   onCharacterSelect,
 }: ChracterCardProps) {
+  const t = useTranslations('ChracterCard');
+
   const { isSelected, toggleSelection } = useSelectionStore();
 
   const handleCheckClick = (event: React.MouseEvent<HTMLInputElement>) => {
@@ -40,7 +44,7 @@ export default function ChracterCard({
       <Image
         className="character-card-image"
         src={`${character.image}`}
-        alt={`Image of ${character.name}`}
+        alt={`${t('altImageOf')} ${character.name}`}
         height={80}
         width={80}
       />

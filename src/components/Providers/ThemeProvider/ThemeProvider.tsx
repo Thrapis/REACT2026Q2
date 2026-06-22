@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, type ReactNode } from 'react';
-import { ThemeContext } from './ThemeContext';
+import { ThemeContext } from '../../../context/Theme/ThemeContext';
 import { THEME_STORAGE_KEY } from '@/constants/LocalStorage';
 
 type Theme = 'light' | 'dark';

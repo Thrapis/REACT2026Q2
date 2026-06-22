@@ -1,10 +1,11 @@
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import NotFoundPage from './not-found';
+import { renderWithI18N } from '@/test-utils/Render';
 
 describe('NotFoundPage', () => {
   const renderPage = () => {
-    return render(<NotFoundPage />);
+    return renderWithI18N(<NotFoundPage />);
   };
 
   it('should render 404 heading and error message correctly', () => {

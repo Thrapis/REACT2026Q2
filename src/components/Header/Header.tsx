@@ -1,30 +1,31 @@
 'use client';
 
 import Link from 'next/link';
-import { useTheme } from '@/hooks/theme/UseTheme';
+import { useTranslations } from 'next-intl';
+
+import LanguageSelector from '@/components/LanguageSelector/LanguageSelector';
 
 import './Header.css';
+import ThemeSwitcher from '../ThemeSwitcher/ThemeSwitcher';
 
 export default function Header() {
-  const { theme, toggleTheme } = useTheme();
-
-  const themeName = () => {
-    return theme.slice(0, 1).toUpperCase() + theme.slice(1);
-  };
+  const t = useTranslations('Header');
 
   return (
     <header className={`header`}>
       <nav className="header-navigation">
         <Link className="header-link" href={'/'}>
-          Home
+          {t('home')}
         </Link>
         <Link className="header-link" href={'/about'}>
-          About
+          {t('about')}
         </Link>
       </nav>
-      <button className="header-button" onClick={toggleTheme}>
-        {themeName()} Theme
-      </button>
+
+      <div className="header-controls">
+        <ThemeSwitcher />
+        <LanguageSelector />
+      </div>
     </header>
   );
 }

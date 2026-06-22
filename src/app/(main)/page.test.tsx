@@ -4,7 +4,7 @@ import HomePage from './page';
 import * as api from '@/api/RickAndMortyAPI';
 import { MOCK_CHARACTER_SEARCH_DATA } from '@/test-utils/Api';
 import { LAST_SEARCH_STORAGE_KEY } from '@/constants/LocalStorage';
-import { RenderWithQueryClient } from '@/test-utils/Render';
+import { renderWithBasicProviders } from '@/test-utils/Render';
 
 vi.mock('@/api/RickAndMortyAPI', () => ({
   searchCharacters: vi.fn(),
@@ -32,7 +32,7 @@ vi.mock('next/navigation', () => ({
 }));
 
 describe('App Component', () => {
-  const renderPage = () => RenderWithQueryClient(<HomePage />);
+  const renderPage = () => renderWithBasicProviders(<HomePage />);
 
   beforeEach(() => {
     vi.clearAllMocks();

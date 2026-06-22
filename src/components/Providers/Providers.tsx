@@ -6,9 +6,12 @@ import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query';
-import { ThemeProvider } from '@/context/Theme/ThemeProvider';
+
 import ErrorBoundary from '@/components/ErrorBoundary/ErrorBoundary';
 import { DEFAULT_CACHE_TTL_MS } from '@/constants/EnvironmentVariables';
+
+import IntlProvider from './IntlProvider/IntlProvider';
+import { ThemeProvider } from './ThemeProvider/ThemeProvider';
 
 const cacheTime =
   Number(process.env.NEXT_PUBLIC_CACHE_TTL_MS) || DEFAULT_CACHE_TTL_MS;
@@ -35,7 +38,9 @@ export default function Providers({ children }: ProvidersProps) {
     <StrictMode>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider>
-          <ErrorBoundary>{children}</ErrorBoundary>
+          <IntlProvider>
+            <ErrorBoundary>{children}</ErrorBoundary>
+          </IntlProvider>
         </ThemeProvider>
       </QueryClientProvider>
     </StrictMode>

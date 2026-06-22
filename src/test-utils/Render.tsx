@@ -1,9 +1,13 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render } from '@testing-library/react';
 
-export const RenderWithQueryClient = (
+import { type Locale } from '@/i18n/locales';
+import IntlProvider from '@/components/Providers/IntlProvider/IntlProvider';
+
+export const renderWithBasicProviders = (
   children: React.ReactNode,
-  queryClientInstance?: QueryClient
+  queryClientInstance?: QueryClient,
+  locale: Locale = 'en'
 ) => {
   const queryClient =
     queryClientInstance ||
@@ -12,6 +16,15 @@ export const RenderWithQueryClient = (
     });
 
   return render(
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      <IntlProvider defaultLocale={locale}>{children}</IntlProvider>
+    </QueryClientProvider>
   );
+};
+
+export const renderWithI18N = (
+  children: React.ReactNode,
+  locale: Locale = 'en'
+) => {
+  return render(<IntlProvider defaultLocale={locale}>{children}</IntlProvider>);
 };

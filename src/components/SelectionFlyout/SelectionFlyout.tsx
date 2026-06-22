@@ -1,11 +1,15 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 import { useSelectionStore } from '@/stores/Selection.store';
 import { convertToCSV, downloadFile } from '@/utils/FileHelper';
 
 import './SelectionFlyout.css';
 
 export default function SelectionFlyout() {
+  const t = useTranslations('SelectionFlyout');
+
   const { characters, removeSelection, clearSelection } = useSelectionStore();
 
   const handleDownload = () => {
@@ -26,8 +30,10 @@ export default function SelectionFlyout() {
         ))}
       </ul>
       <div className="selection-flyout-controls">
-        <button onClick={handleDownload}>Download ({characters.length})</button>
-        <button onClick={clearSelection}>Unselect All</button>
+        <button onClick={handleDownload}>
+          {t('download')} ({characters.length})
+        </button>
+        <button onClick={clearSelection}>{t('unselectAll')}</button>
       </div>
     </div>
   );

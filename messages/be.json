@@ -1,0 +1,64 @@
+{
+  "HomePage": {
+    "search": "Пошук",
+    "spamInfo": "Каб атрымаць памылку API, націскайце кнопку \"Абнавіць\" шмат разоў",
+    "refresh": "Абнавіць",
+    "results": "Вынікі:",
+    "noResults": "*Няма вынікаў*",
+    "unknownErrorMessage": "Нешта пайшло не так",
+    "altLoadingImage": "Загрузка..."
+  },
+  "DetailsPage": {
+    "refresh": "Абнавіць",
+    "details": "Дэталі:",
+    "unknownErrorMessage": "Нешта пайшло не так",
+    "altLoadingImage": "Загрузка...",
+    "altImageOf": "Выява",
+    "speciesProp": "Від:",
+    "genderProp": "Пол:",
+    "statusProp": "Статус:"
+  },
+  "AboutPage": {
+    "about": "Пра нас",
+    "author": "Аўтар",
+    "school": "Школа",
+    "return": "Вярнуцца"
+  },
+  "NotFoundPage": {
+    "page404": "Старонка 404",
+    "pageNotFound": "Старонка не знойдзена",
+    "return": "Вярнуцца"
+  },
+  "ChracterCard": {
+    "altImageOf": "Выява"
+  },
+  "ErrorBoundary": {
+    "errorLogPrefix": "Памылка Boundary:",
+    "errorTitle": "Нешта пайшло не так.",
+    "reload": "Перазагрузіць"
+  },
+  "ErrorMessage": {
+    "error": "Памылка",
+    "retrySearch": "Паўтарыць пошук"
+  },
+  "ErrorThrowButton": {
+    "errorMessage": "Памылка, выкліканая ўручную",
+    "throwError": "Выклікаць памылку"
+  },
+  "Header": {
+    "home": "Галоўная",
+    "about": "Пра нас"
+  },
+  "Pagination": {
+    "prev": "Папярэдняя",
+    "next": "Наступная"
+  },
+  "SelectionFlyout": {
+    "download": "Сцягнуць",
+    "unselectAll": "Зняць выбар з усіх"
+  },
+  "ThemeSwitcher": {
+    "lightTheme": "Светлая тэма",
+    "darkTheme": "Цёмная тэма"
+  }
+}

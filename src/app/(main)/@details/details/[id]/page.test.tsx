@@ -4,7 +4,7 @@ import DetailsPage from './page';
 import * as api from '@/api/RickAndMortyAPI';
 import { QueryClient } from '@tanstack/react-query';
 import { FETCH_CHARACTER_ERROR_TEXT, MOCK_CHARACTER } from '@/test-utils/Api';
-import { RenderWithQueryClient } from '@/test-utils/Render';
+import { renderWithBasicProviders } from '@/test-utils/Render';
 
 vi.mock('@/api/RickAndMortyAPI', () => ({
   getCharacter: vi.fn(),
@@ -27,13 +27,13 @@ describe('DetailsPage', () => {
     vi.clearAllMocks();
   });
 
-  const renderWithQueryClientAndParameters = (
+  const RenderWithBasicProvidersAndParameters = (
     stringId: string,
     queryClientInstance?: QueryClient
   ) => {
     const mockParamsPromise = Promise.resolve({ id: stringId });
 
-    return RenderWithQueryClient(
+    return renderWithBasicProviders(
       <DetailsPage params={mockParamsPromise} />,
       queryClientInstance
     );
@@ -43,7 +43,7 @@ describe('DetailsPage', () => {
     vi.mocked(api.getCharacter).mockResolvedValue(MOCK_CHARACTER);
 
     await act(async () => {
-      renderWithQueryClientAndParameters('1');
+      RenderWithBasicProvidersAndParameters('1');
     });
 
     const loader = screen.getByRole('img');
@@ -55,7 +55,7 @@ describe('DetailsPage', () => {
     vi.mocked(api.getCharacter).mockResolvedValue(MOCK_CHARACTER);
 
     await act(async () => {
-      renderWithQueryClientAndParameters('1');
+      RenderWithBasicProvidersAndParameters('1');
     });
 
     await waitFor(() => {
@@ -78,7 +78,7 @@ describe('DetailsPage', () => {
     );
 
     await act(async () => {
-      renderWithQueryClientAndParameters('1');
+      RenderWithBasicProvidersAndParameters('1');
     });
 
     await waitFor(() => {
@@ -90,7 +90,7 @@ describe('DetailsPage', () => {
     vi.mocked(api.getCharacter).mockResolvedValue(MOCK_CHARACTER);
 
     await act(async () => {
-      renderWithQueryClientAndParameters('1');
+      RenderWithBasicProvidersAndParameters('1');
     });
 
     await waitFor(() => {
@@ -112,7 +112,7 @@ describe('DetailsPage', () => {
     const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries');
 
     await act(async () => {
-      renderWithQueryClientAndParameters('1', queryClient);
+      RenderWithBasicProvidersAndParameters('1', queryClient);
     });
 
     await waitFor(() => {
@@ -138,7 +138,7 @@ describe('DetailsPage', () => {
     const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries');
 
     await act(async () => {
-      renderWithQueryClientAndParameters('abc', queryClient);
+      RenderWithBasicProvidersAndParameters('abc', queryClient);
     });
 
     const refreshButton = await screen.findByRole('button', {

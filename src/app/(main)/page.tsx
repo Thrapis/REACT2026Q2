@@ -4,6 +4,8 @@ import Image from 'next/image';
 import { useRef, useEffect } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
+
 import useLocalStorage from '@/hooks/local-storage/UseLocalStorage';
 import { useCharacterSearch } from '@/hooks/query/UseCharacterSearch';
 
@@ -31,6 +33,7 @@ export default function HomePage({ children }: HomePageProps) {
   const pathname = usePathname();
   const searchInput = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
+  const t = useTranslations('HomePage');
 
   const queryFromParams = searchParams?.get('search') ?? null;
   const pageFromParams = searchParams?.get('page') ?? null;
@@ -90,30 +93,30 @@ export default function HomePage({ children }: HomePageProps) {
     <>
       <section className="top-controls-section">
         <input type="text" ref={searchInput} defaultValue={initialQuery} />
-        <button onClick={handleSearch}>Search</button>
+        <button onClick={handleSearch}>{t('search')}</button>
       </section>
 
-      <section className="info-section">
-        To get API Error spam &apos;Refresh&apos; button
-      </section>
+      <section className="info-section">{t('spamInfo')}</section>
 
       <section className="results-section">
         <div className="search-results">
           {!isError && (
             <div className="results-title">
-              <button onClick={handleRefresh}>Refresh</button>
-              <h3>Results:</h3>
+              <button onClick={handleRefresh}>{t('refresh')}</button>
+              <h3>{t('results')}</h3>
             </div>
           )}
 
           {data === undefined && !isError && !isFetching && (
-            <span>*No results*</span>
+            <span>{t('noResults')}</span>
           )}
 
           {isError && (
             <ErrorMessage
               message={
-                error instanceof Error ? error.message : 'Something went wrong'
+                error instanceof Error
+                  ? error.message
+                  : t('unknownErrorMessage')
               }
               onRetry={handleRefresh}
             />
@@ -159,7 +162,7 @@ export default function HomePage({ children }: HomePageProps) {
           <Image
             className="loading-indicator"
             src={loadingSVG}
-            alt="Loading..."
+            alt={t('altLoadingImage')}
             loading="eager"
           />
         </div>
