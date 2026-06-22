@@ -33,11 +33,11 @@ export default function HomePage({ children }: HomePageProps) {
   const queryClient = useQueryClient();
 
   const queryFromParams = searchParams?.get('search') ?? null;
-  const pageFromParams = Number(searchParams?.get('page')) || 1;
+  const pageFromParams = searchParams?.get('page') ?? null;
 
   const initialQuery =
     queryFromParams !== null ? queryFromParams : storageSearchValue || '';
-  const initialPage = queryFromParams !== null ? pageFromParams : 1;
+  const initialPage = pageFromParams !== null ? Number(pageFromParams) : 1;
 
   const { data, isFetching, isError, error } = useCharacterSearch(
     initialQuery,
@@ -147,7 +147,7 @@ export default function HomePage({ children }: HomePageProps) {
             />
           )}
         </div>
-        <div className="details-side">{children}</div>
+        <div className="details-side">{pathname !== '/' ? children : null}</div>
       </section>
 
       <section className="app-control-section">
