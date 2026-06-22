@@ -1,68 +1,65 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { MemoryRouter } from 'react-router-dom';
 import HomePage from './page';
 import * as api from '@/api/RickAndMortyAPI';
-import type { CharacterSearchResult } from '@/types/CharacterSearchResult';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { MOCK_CHARACTER_SEARCH_DATA } from '@/test-utils/Api';
+import { LAST_SEARCH_STORAGE_KEY } from '@/constants/LocalStorage';
+import { RenderWithQueryClient } from '@/test-utils/Render';
 
 vi.mock('@/api/RickAndMortyAPI', () => ({
   searchCharacters: vi.fn(),
 }));
 
-describe('App Component', () => {
-  const mockData: CharacterSearchResult = {
-    info: { count: 1, pages: 1, next: '', prev: '' },
-    results: [
-      {
-        id: 1,
-        name: 'Rick Sanchez',
-        image: '',
-        species: 'Human',
-        gender: 'Male',
-        status: 'Alive',
-      },
-    ],
-  };
+let mockParams = new URLSearchParams();
+const mockPush = vi.fn();
+const mockReplace = vi.fn();
 
-  const STORAGE_KEY = 'last-search';
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: (url: string) => {
+      mockPush(url);
+      const queryString = url.split('?')[1];
+      mockParams = new URLSearchParams(queryString || '');
+    },
+    replace: (url: string) => {
+      mockReplace(url);
+      const queryString = url.split('?')[1];
+      mockParams = new URLSearchParams(queryString || '');
+    },
+  }),
+  useSearchParams: () => mockParams,
+  usePathname: () => '/',
+}));
+
+describe('App Component', () => {
+  const renderPage = () => RenderWithQueryClient(<HomePage />);
 
   beforeEach(() => {
     vi.clearAllMocks();
     localStorage.clear();
+    mockParams = new URLSearchParams();
 
-    vi.mocked(api.searchCharacters).mockResolvedValue(mockData);
+    vi.mocked(api.searchCharacters).mockResolvedValue(
+      MOCK_CHARACTER_SEARCH_DATA
+    );
   });
 
-  const renderApp = () => {
-    const queryClient = new QueryClient({
-      defaultOptions: { queries: { retry: false } },
-    });
-
-    return render(
-      <QueryClientProvider client={queryClient}>
-        <MemoryRouter>
-          <HomePage />
-        </MemoryRouter>
-      </QueryClientProvider>
-    );
-  };
-
   it('should load data from localStorage on start', async () => {
-    localStorage.setItem(STORAGE_KEY, 'Morty');
+    const searchTerm = 'Morty';
+    localStorage.setItem(LAST_SEARCH_STORAGE_KEY, searchTerm);
 
-    renderApp();
+    renderPage();
 
     const input = screen.getByRole('textbox') as HTMLInputElement;
-    expect(input.value).toBe('Morty');
+    expect(input.value).toBe(searchTerm);
 
     await waitFor(() => {
-      expect(api.searchCharacters).toHaveBeenCalledWith('Morty', 1);
+      expect(api.searchCharacters).toHaveBeenCalledWith(searchTerm, 1);
     });
   });
 
   it('should write search query in localStorage with trimming', async () => {
-    renderApp();
+    renderPage();
 
     const input = screen.getByRole('textbox');
     const searchButton = screen.getByRole('button', { name: 'Search' });
@@ -74,14 +71,14 @@ describe('App Component', () => {
       expect(api.searchCharacters).toHaveBeenCalled();
     });
 
-    const storedValue = localStorage.getItem(STORAGE_KEY);
+    const storedValue = localStorage.getItem(LAST_SEARCH_STORAGE_KEY);
     expect(storedValue === 'Morty').toBe(true);
   });
 
   it('should show loading indicator', async () => {
     vi.mocked(api.searchCharacters).mockReturnValue(new Promise(() => {}));
 
-    renderApp();
+    renderPage();
 
     const searchButton = screen.getByRole('button', { name: 'Search' });
     fireEvent.click(searchButton);
@@ -95,7 +92,7 @@ describe('App Component', () => {
     const errorText = 'API Error';
     vi.mocked(api.searchCharacters).mockRejectedValue(new Error(errorText));
 
-    renderApp();
+    renderPage();
 
     const searchButton = screen.getByRole('button', { name: 'Search' });
     fireEvent.click(searchButton);
@@ -106,7 +103,7 @@ describe('App Component', () => {
   });
 
   it('should update list of results on succesed API call', async () => {
-    renderApp();
+    renderPage();
 
     const input = screen.getByRole('textbox');
     const searchButton = screen.getByRole('button', { name: 'Search' });
@@ -120,7 +117,7 @@ describe('App Component', () => {
   });
 
   it('should stop search if repeated query', async () => {
-    renderApp();
+    renderPage();
 
     await waitFor(() => {
       expect(api.searchCharacters).toHaveBeenCalled();

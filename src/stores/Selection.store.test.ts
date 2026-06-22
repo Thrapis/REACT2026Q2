@@ -1,25 +1,10 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { useSelectionStore } from './Selection.store';
-import type { CharacterSearchResultEntry } from '@/types/CharacterSearchResult';
+import { MOCK_CHARACTERS } from '@/test-utils/Api';
 
 describe('Selection Store', () => {
-  const mockCharacter1: CharacterSearchResultEntry = {
-    id: 1,
-    name: 'Rick Sanchez',
-    image: '',
-    species: 'Human',
-    gender: 'Male',
-    status: 'Alive',
-  };
-
-  const mockCharacter2: CharacterSearchResultEntry = {
-    id: 2,
-    name: 'Morty Smith',
-    image: '',
-    species: 'Human',
-    gender: 'Male',
-    status: 'Alive',
-  };
+  const mockCharacter1 = MOCK_CHARACTERS[0];
+  const mockCharacter2 = MOCK_CHARACTERS[1];
 
   beforeEach(() => {
     useSelectionStore.setState({ characters: [] });

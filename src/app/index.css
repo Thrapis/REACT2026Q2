@@ -24,7 +24,7 @@
   --anchor-text-hover: #1a1a86;
 }
 
-[data-theme='dark'] {
+:root[data-theme='dark'] {
   --background-primary: #121212;
   --background-secondary: #1e1e1e;
   --background-surface: #2d2d2d;

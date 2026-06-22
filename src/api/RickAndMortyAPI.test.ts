@@ -1,5 +1,6 @@
 import { it, expect, vi, describe, beforeEach } from 'vitest';
-import { searchCharacters } from './RickAndMortyAPI';
+import { searchCharacters, getCharacter } from './RickAndMortyAPI';
+import { MOCK_CHARACTER, MOCK_CHARACTER_SEARCH_DATA } from '@/test-utils/Api';
 
 describe('API functions', () => {
   beforeEach(() => {
@@ -22,6 +23,19 @@ describe('API functions', () => {
     expect(result).toEqual(mockData);
   });
 
+  it('searchCharacters should encode uri components', async () => {
+    vi.mocked(fetch).mockResolvedValue({
+      ok: true,
+      json: async () => MOCK_CHARACTER_SEARCH_DATA,
+    } as Response);
+
+    await searchCharacters('Rick Sanchez', 1);
+
+    expect(fetch).toHaveBeenCalledWith(
+      'https://rickandmortyapi.com/api/character?name=Rick Sanchez&page=1'
+    );
+  });
+
   it('searchCharacters should return error if response.ok === false', async () => {
     const errorText = 'There is nothing here';
     const errorResponse = { error: errorText };
@@ -33,6 +47,31 @@ describe('API functions', () => {
 
     await expect(searchCharacters('SomeUnrealShite')).rejects.toThrow(
       errorText
+    );
+  });
+
+  it('getCharacter should return single character data', async () => {
+    vi.mocked(fetch).mockResolvedValue({
+      ok: true,
+      json: async () => MOCK_CHARACTER,
+    } as Response);
+
+    const result = await getCharacter(1);
+
+    expect(fetch).toHaveBeenCalledWith(
+      'https://rickandmortyapi.com/api/character/1'
+    );
+    expect(result).toEqual(MOCK_CHARACTER);
+  });
+
+  it('getCharacter should throw default error if response.ok === false', async () => {
+    vi.mocked(fetch).mockResolvedValue({
+      ok: false,
+      json: async () => ({}),
+    } as Response);
+
+    await expect(getCharacter(9999)).rejects.toThrow(
+      'Failed to load character data'
     );
   });
 });

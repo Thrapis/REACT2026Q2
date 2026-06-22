@@ -1,24 +1,15 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import ChracterCard from './ChracterCard';
-import type { CharacterSearchResultEntry } from '@/types/CharacterSearchResult';
+import { MOCK_CHARACTER } from '@/test-utils/Api';
 
 describe('ChracterCard', () => {
-  const mockCharacter: CharacterSearchResultEntry = {
-    id: 1,
-    name: 'Rick Sanchez',
-    status: 'Alive',
-    species: 'Human',
-    gender: 'Male',
-    image: 'image_link',
-  };
-
   it('should show character name and description', () => {
-    render(<ChracterCard character={mockCharacter} />);
+    render(<ChracterCard character={MOCK_CHARACTER} />);
 
-    expect(screen.getByText(mockCharacter.name)).toBeInTheDocument();
+    expect(screen.getByText(MOCK_CHARACTER.name)).toBeInTheDocument();
 
     const image = screen.getByRole('img') as HTMLImageElement;
-    expect(image.src).toContain(mockCharacter.image);
+    expect(image.src).toContain(MOCK_CHARACTER.image);
   });
 });

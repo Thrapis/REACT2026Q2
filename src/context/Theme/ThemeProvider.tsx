@@ -2,38 +2,58 @@
 
 import { useEffect, useState, type ReactNode } from 'react';
 import { ThemeContext } from './ThemeContext';
+import { THEME_STORAGE_KEY } from '@/constants/LocalStorage';
 
 type Theme = 'light' | 'dark';
+
+function isTheme(value: string): value is Theme {
+  return value === 'light' || value === 'dark';
+}
 
 interface ThemeProviderProps {
   children: ReactNode;
   defaultTheme?: Theme;
-  storageKey?: string;
 }
 
 export function ThemeProvider({
   children,
   defaultTheme = 'light',
-  storageKey = 'app-theme',
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(() => {
-    if (typeof window !== 'undefined') {
-      const savedTheme = localStorage.getItem(storageKey) as Theme | null;
-      return savedTheme || defaultTheme;
-    }
-    return defaultTheme;
-  });
+  const [theme, setTheme] = useState<Theme>(defaultTheme);
+  const [isMounted, setIsMounted] = useState(false);
+
+  const getStorageTheme = () => {
+    const storageValue = localStorage.getItem(THEME_STORAGE_KEY);
+    const currentTheme =
+      storageValue && isTheme(storageValue) ? storageValue : defaultTheme;
+    return currentTheme;
+  };
+
+  const applyTheme = (theme: Theme) => {
+    document.documentElement.setAttribute('data-theme', theme);
+  };
 
   const toggleTheme = () => {
-    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
+    const nextTheme = theme === 'light' ? 'dark' : 'light';
+    localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+    setTheme(nextTheme);
+    applyTheme(nextTheme);
   };
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(storageKey, theme);
-      document.documentElement.setAttribute('data-theme', theme);
+    const storageTheme = getStorageTheme();
+    if (theme !== storageTheme) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setTheme(storageTheme);
     }
-  }, [theme, storageKey]);
+    applyTheme(storageTheme);
+    setIsMounted(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  if (!isMounted) {
+    return null;
+  }
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>

@@ -1,6 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { MemoryRouter } from 'react-router-dom';
 import Header from './Header';
 import { useTheme } from '@/hooks/theme/UseTheme';
 
@@ -16,11 +15,7 @@ describe('Header Component', () => {
   });
 
   const renderHeader = () => {
-    return render(
-      <MemoryRouter>
-        <Header />
-      </MemoryRouter>
-    );
+    return render(<Header />);
   };
 
   it('should render navigation links correctly', () => {

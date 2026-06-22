@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { convertToCSV, downloadFile } from './FileHelper';
+import { MOCK_CHARACTERS } from '@/test-utils/Api';
 import type { CharacterSearchResultEntry } from '@/types/CharacterSearchResult';
 
 describe('FileHelper', () => {
@@ -10,32 +11,13 @@ describe('FileHelper', () => {
     });
 
     it('should correctly format a list of characters into semicolon-separated rows', () => {
-      const mockList: Partial<CharacterSearchResultEntry>[] = [
-        {
-          id: 1,
-          name: 'Rick',
-          status: 'Alive',
-          species: 'Human',
-          gender: 'Male',
-          image: 'url1',
-        },
-        {
-          id: 2,
-          name: 'Morty',
-          status: 'Alive',
-          species: 'Human',
-          gender: 'Male',
-          image: 'url2',
-        },
-      ];
-
       const expectedCSV = [
         'id;name;status;species;gender;image',
-        '1;Rick;Alive;Human;Male;url1',
-        '2;Morty;Alive;Human;Male;url2',
+        '1;Rick Sanchez;Alive;Human;Male;image-link-1',
+        '2;Morty Smith;Alive;Human;Male;image-link-2',
       ].join('\n');
 
-      const result = convertToCSV(mockList as CharacterSearchResultEntry[]);
+      const result = convertToCSV(MOCK_CHARACTERS);
       expect(result).toBe(expectedCSV);
     });
 

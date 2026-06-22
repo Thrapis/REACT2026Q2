@@ -8,9 +8,10 @@ import {
 } from '@tanstack/react-query';
 import { ThemeProvider } from '@/context/Theme/ThemeProvider';
 import ErrorBoundary from '@/components/ErrorBoundary/ErrorBoundary';
+import { DEFAULT_CACHE_TTL_MS } from '@/constants/EnvironmentVariables';
 
 const cacheTime =
-  Number(process.env.NEXT_PUBLIC_CACHE_TTL_MS) || 10 * 60 * 1000;
+  Number(process.env.NEXT_PUBLIC_CACHE_TTL_MS) || DEFAULT_CACHE_TTL_MS;
 
 interface ProvidersProps {
   children: React.ReactNode;

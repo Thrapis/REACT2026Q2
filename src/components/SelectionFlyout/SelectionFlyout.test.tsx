@@ -2,17 +2,13 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import SelectionFlyout from './SelectionFlyout';
 import { useSelectionStore } from '@/stores/Selection.store';
+import { MOCK_CHARACTERS } from '@/test-utils/Api';
 
 vi.mock('@/stores/Selection.store', () => ({
   useSelectionStore: vi.fn(),
 }));
 
 describe('SelectionFlyout', () => {
-  const mockCharacters = [
-    { id: 1, name: 'Rick Sanchez' },
-    { id: 2, name: 'Morty Smith' },
-  ];
-
   const mockRemoveSelection = vi.fn();
   const mockClearSelection = vi.fn();
 
@@ -36,7 +32,7 @@ describe('SelectionFlyout', () => {
 
   it('should render items and counter when characters are selected', () => {
     vi.mocked(useSelectionStore).mockReturnValue({
-      characters: mockCharacters,
+      characters: MOCK_CHARACTERS,
       removeSelection: mockRemoveSelection,
       clearSelection: mockClearSelection,
     });
@@ -45,14 +41,14 @@ describe('SelectionFlyout', () => {
     const component = container.firstChild as HTMLElement;
 
     expect(component).not.toHaveClass('hidden');
-    expect(screen.getByText('Rick Sanchez')).toBeInTheDocument();
-    expect(screen.getByText('Morty Smith')).toBeInTheDocument();
+    expect(screen.getByText(MOCK_CHARACTERS[0].name)).toBeInTheDocument();
+    expect(screen.getByText(MOCK_CHARACTERS[1].name)).toBeInTheDocument();
     expect(screen.getByText('Download (2)')).toBeInTheDocument();
   });
 
   it('should call removeSelection with correct id when delete button clicked', () => {
     vi.mocked(useSelectionStore).mockReturnValue({
-      characters: mockCharacters,
+      characters: MOCK_CHARACTERS,
       removeSelection: mockRemoveSelection,
       clearSelection: mockClearSelection,
     });
@@ -68,7 +64,7 @@ describe('SelectionFlyout', () => {
 
   it('should call clearSelection when unselect button clicked', () => {
     vi.mocked(useSelectionStore).mockReturnValue({
-      characters: mockCharacters,
+      characters: MOCK_CHARACTERS,
       removeSelection: mockRemoveSelection,
       clearSelection: mockClearSelection,
     });
